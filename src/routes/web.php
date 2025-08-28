@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemController;
+
+//商品一覧画面表示
+Route::get('/', [ItemController::class, 'index'])->name('items.index');
 
 //ユーザー（管理者）登録
 //ログイン済みユーザーは登録ページにアクセスできないようにmiddleware('guest')を追加
@@ -15,5 +19,3 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [ProfileController::class, 'showProfilePage'])->name('profile.show');
 });
-
-

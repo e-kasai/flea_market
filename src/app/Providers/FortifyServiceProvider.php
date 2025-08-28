@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 use App\Http\Requests\LoginUserRequest;
 
-
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -21,14 +20,15 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        //同じIPや同じメールからの連続ログイン施行を制限
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
             return Limit::perMinute(5)->by($throttleKey);
         });
 
+        // Fortify が使うLoginRequestを自作のFR(LoginUserRequest)に差し替える
         $this->app->bind(LoginRequest::class, LoginUserRequest::class);
 
-        // login を開いたとき、auth/login.blade.php を表示する(fortifyがrouteを担当)
         Fortify::loginView(function () {
             return view('auth.login');
         });
