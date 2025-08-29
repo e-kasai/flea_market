@@ -10,12 +10,23 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 use App\Http\Requests\LoginUserRequest;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            LogoutResponse::class,
+            function () {
+                return new class implements LogoutResponse {
+                    public function toResponse($request)
+                    {
+                        return redirect()->route('items.index');
+                    }
+                };
+            }
+        );
     }
 
     public function boot(): void
