@@ -4,43 +4,30 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ProfilePage</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset("css/sanitize.css") }}" />
-        <link rel="stylesheet" href="{{ asset("css/index.css") }}" />
+        <link rel="stylesheet" href="{{ asset("css/common.css") }}" />
+        <link rel="stylesheet" href="{{ asset("css/profile.css") }}" />
     </head>
 
     <body>
         {{-- ヘッダー --}}
-        <header class="header">
-            <div class="header__container">
-                <a class="header__logo" href="{{ url("/") }}">
-                    <img src="{{ asset("img/logo.svg") }}" alt="No Image" class="logo" />
-                </a>
-                <form class="header__search" action="/" method="GET">
-                    <input
-                        class="search__input"
-                        type="text"
-                        name="keyword"
-                        value="{{ request("keyword") }}"
-                        placeholder="何をお探しですか？"
-                    />
-                </form>
-                <nav class="header__nav">
-                    <form class="logout-form" action="{{ route("logout") }}" method="POST">
-                        @csrf
-                        <button type="submit" class="logout-form__btn">ログアウト</button>
-                    </form>
-                    <a href="/mypage" class="nav__link-mypage">マイページ</a>
-                    <a href="/sell" class="nav__link-sell">出品</a>
-                </nav>
-            </div>
-        </header>
+        @include("layouts.header")
         {{-- ヘッダーここまで --}}
         <main>
             <section class="profile-info">
-                {{-- プロフィール画像(未) --}}
-                <img class="profile-info__image" src="img/dog.jpg" alt="NoImage" />
+                {{-- プロフィール画像 --}}
+                <img
+                    class="profile-avatar"
+                    src="{{
+                        $userProfile->avatar_path
+                            ? asset("storage/" . $userProfile->avatar_path)
+                            : asset("img/dog.jpg")
+                    }}"
+                    alt="プロフィール画像"
+                />
                 {{-- ユーザー名 --}}
-                <h1 class="user-name">{{ $profile->user->name }}</h1>
+                <h1 class="user-name">{{ $currentUser->user->name }}</h1>
                 {{-- プロフィールを編集ボタン風リンク --}}
                 <a class="user__link-edit" href="{{ route("profile.edit") }}">プロフィールを編集</a>
             </section>
@@ -51,12 +38,12 @@
                         <input type="radio" name="TAB" checked />
                         出品した商品
                     </label>
-                    <div class="tab-content">タブ①の内容をここに表示します</div>
+                    <div class="tab-content">まだ出品データがありません</div>
                     <label>
                         <input type="radio" name="TAB" />
                         購入した商品
                     </label>
-                    <div class="tab-content">タブ②の内容をここに表示します</div>
+                    <div class="tab-content">まだ購入データがありません</div>
                 </div>
             </section>
         </main>
