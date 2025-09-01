@@ -18,8 +18,7 @@ class Profile extends Model
         'avatar_path',
     ];
 
-    // 1つに属するので単数形のメソッド名を使う
-    // このメソッド名をコントローラで with() の引数に指定する
+    // プロフィールは必ず１人のuserに属する = belongsTo
     public function user()
     {
         return $this->belongsTo(User::class);
