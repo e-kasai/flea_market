@@ -21,6 +21,7 @@ class CreateProfilesTable extends Migration
         });
     }
 
+
     public function down(): void
     {
         Schema::dropIfExists('profiles');
