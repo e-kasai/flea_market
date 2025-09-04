@@ -1,0 +1,95 @@
+/*---------------------------------
+プロフィール編集画面
+---------------------------------*/
+
+/* 配置設定：画像と画像選択ボタンが横並び */
+.avatar-path__group {
+    display: flex;
+    align-items: center;
+    /* gap: 2.5rem; */
+    gap: clamp(1.6rem, 4vw, 2.5rem);
+}
+
+/* プロフィール画像 */
+.avatar {
+    inline-size: clamp(64px, 12vw, 160px); /* width */
+    block-size: clamp(64px, 12vw, 160px); /* height */
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1; /* 正方形維持 */
+    border: 2px solid #ccc;
+    display: block;
+}
+
+/* プロフィール画像選択 */
+/* inputを隠す */
+.avatar-path__input {
+    appearance: none;
+    visibility: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    width: 0;
+    height: 0;
+    font-size: 100%;
+    line-height: inherit;
+}
+
+/* 自作ボタン風 */
+.avatar-path__label {
+    display: inline-block;
+    padding: clamp(0.6rem, 2vw, 1rem) clamp(1.2rem, 4vw, 2rem);
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: bold;
+    color: #ff6b6b;
+    border: 2px solid #ff6b6b;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.avatar-path__label:hover {
+    background: #ff6b6b;
+    color: #fff;
+}
+
+/*---------------------------------
+プロフィール画面
+---------------------------------*/
+
+/* 配置設定：画像とプロフィール編集リンクが横並び*/
+.profile {
+    display: flex;
+    align-items: center;
+    /* gap: clamp(5rem, 4vw, 10rem); */
+}
+
+/* ユーザー名 */
+.profile__name {
+    font-size: clamp(2rem, 2vw, 6rem);
+    margin: 0 clamp(2rem, 6vw, 6rem) 0 clamp(1rem, 3vw, 2rem);
+}
+
+/* プロフィールを編集リンク */
+/* ボタン風リンク */
+.profile__link-edit {
+    display: inline-block;
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.6rem, 4vw, 2rem);
+    font-size: clamp(1rem, 2vw, 1.6rem);
+    border: 2px solid #ff6b6b;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #ff6b6b;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+
+.profile__link-edit:hover {
+    background: #ff6b6b;
+    color: #fff;
+}

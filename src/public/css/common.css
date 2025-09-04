@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /*---------------------------------
 CSS VARIABLES
 ---------------------------------*/
@@ -12,10 +18,14 @@ ENTIRE PAGE SETTING
 /* 1rem = 10pxに設定しわかりやすくする */
 html {
     font-size: 62.5%;
+    margin: 0;
+    padding: 0;
 }
 /* 全てのフォントをinterに設定 */
 body {
     font-family: var(--ff);
+    margin: 0;
+    padding: 0;
 }
 
 /*---------------------------------
@@ -43,8 +53,8 @@ HEADER
 }
 
 .logo-image {
-    padding: 2rem 0;
-    width: clamp(100px, 15vw, 240px);
+    padding: 2rem 1.5rem;
+    width: clamp(120px, 25vw, 350px);
     height: auto;
 }
 
