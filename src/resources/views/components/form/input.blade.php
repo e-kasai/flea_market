@@ -13,7 +13,6 @@
 
     // id は渡されていればそれ、無ければ name を使う
     $id = $attributes->get("id") ?? $name;
-
     // エラー用ID
     $errorId = $id . "-error";
 @endphp

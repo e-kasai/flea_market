@@ -3,13 +3,13 @@
 
 {{-- 親ビューで <x-form.card> ... </x-form.card> の間に書かれた中身がここに差し込まれる --}}
 
-@props(["title" => "", "action" => "#", "method" => "POST"])
+@props(["title" => "", "action" => "#", "method" => "POST", "enctype" => ""])
 
 <section class="form-card">
     {{-- ページごとに異なるフォームタイトルを簡単に変えられる --}}
     <h2 class="form-card__title">{{ $title }}</h2>
 
-    <form class="form-card__contents" method="POST" action="{{ $action }}" novalidate>
+    <form class="form-card__contents" method="POST" action="{{ $action }}" enctype="{{ $enctype }}" novalidate>
         @csrf
         {{-- strtoupper は PHPの組み込み関数、文字列をすべて大文字に変換 --}}
         {{-- $methodは親bladeから送られてきたmethod --}}
