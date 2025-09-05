@@ -18,14 +18,14 @@ class ItemController extends Controller
         // おすすめ（検索条件があれば絞り込み）
         $items = Item::when($keyword, function ($query, $keyword) {
             return $query->where('item_name', 'LIKE', "%{$keyword}%");
-        })->paginate(12)->withQueryString();
+        })->get();
 
 
         // マイリストはログイン状態の場合のみ表示
         if ($activeTab === 'mylist' && auth()->check()) {
             $myListItems = auth()->user()->favoriteItems()
                 ->when($keyword, fn($query, $keyword) =>
-                $query->where('item_name', 'LIKE', "%{$keyword}%"))->paginate(12)->withQueryString();
+                $query->where('item_name', 'LIKE', "%{$keyword}%"))->get();
         } else {
             $myListItems = collect();
         }
@@ -35,5 +35,16 @@ class ItemController extends Controller
             'items'     => $items,
             'myListItems'    => $myListItems,
         ]);
+    }
+
+    //商品詳細表示
+    public function showItemDetail($id)
+    {
+        $item = Item::findOrFail($id);
+        $favoritesCount = $item->favoritedByUsers()->count();
+        $isFavorited = auth()->check()
+            ? $item->favoritedByUsers()->where('user_id', auth()->id())->exists()
+            : false;
+        return view('detail', compact('item', 'favoritesCount', 'isFavorited'));
     }
 }
