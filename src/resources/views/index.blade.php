@@ -33,15 +33,15 @@
                             @php
                                 if (Str::startsWith($item->image_path, "http")) {
                                     // S3など外部URLの場合
-                                    $img = $item->image_path;
+                                    $imageRecommend = $item->image_path;
                                 } else {
                                     // ローカルストレージの場合
-                                    $img = asset("storage/" . $item->image_path);
+                                    $imageRecommend = asset("storage/" . $item->image_path);
                                 }
                             @endphp
 
                             <div class="item-card">
-                                <img src="{{ $img }}" alt="{{ $item->item_name }}" class="item-card__img" />
+                                <img src="{{ $imageRecommend }}" alt="{{ $item->item_name }}" class="item-card__img" />
                                 <p class="item-card__name">{{ $item->item_name }}</p>
                             </div>
                         @endforeach
@@ -54,10 +54,20 @@
                 <label class="tabs__label" for="tab-mylist"></label>
                 <div class="tabs__content">
                     <section class="item-grid">
-                        @foreach ($myListItems as $item)
+                        @foreach ($myListItems as $myListItem)
+                            @php
+                                if (Str::startsWith($myListItem->image_path, "http")) {
+                                    // S3など外部URLの場合
+                                    $imageMylist = $myListItem->image_path;
+                                } else {
+                                    // ローカルストレージの場合
+                                    $imageMylist = asset("storage/" . $myListItem->image_path);
+                                }
+                            @endphp
+
                             <div class="item-card">
-                                <img src="{{ $item->image_path }}" alt="{{ $item->item_name }}" class="item-card__img" />
-                                <p class="item-card__name">{{ $item->item_name }}</p>
+                                <img src="{{ $imageMylist }}" alt="{{ $myListItem->item_name }}" class="item-card__img" />
+                                <p class="item-card__name">{{ $myListItem->item_name }}</p>
                             </div>
                         @endforeach
                     </section>

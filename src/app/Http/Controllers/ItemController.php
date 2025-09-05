@@ -29,7 +29,6 @@ class ItemController extends Controller
         } else {
             $myListItems = collect();
         }
-
         return view('index', [
             'activeTab' => $activeTab,
             'items'     => $items,
