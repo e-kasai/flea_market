@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//モデルクラスのインポート
 use App\Models\Item;
-
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -37,13 +36,18 @@ class ItemController extends Controller
     }
 
     //商品詳細表示
-    public function showItemDetail($id)
+    public function showItemDetail(Item $item)
     {
-        $item = Item::findOrFail($id);
+        $currentUser = Auth::user();
+        $item->load(['comments.user.profile', 'categories']);
+
+        $comments = $item->comments()->oldest()->get();
+
         $favoritesCount = $item->favoritedByUsers()->count();
         $isFavorited = auth()->check()
             ? $item->favoritedByUsers()->where('user_id', auth()->id())->exists()
             : false;
-        return view('detail', compact('item', 'favoritesCount', 'isFavorited'));
+
+        return view('detail', compact('item', 'favoritesCount', 'isFavorited', 'comments', 'currentUser'));
     }
 }

@@ -29,37 +29,33 @@
                 ¥{{ number_format($item->price) }}
                 <small>（税込）</small>
             </p>
-
-            {{-- いいね --}}
             <div class="like-area">
-                <span class="like-count">{{ $favoritesCount }}</span>
+                @if ($isFavorited)
+                    {{-- いいね済み --}}
+                    <form method="POST" action="{{ route("favorite.destroy", ["item" => $item->id]) }}">
+                        @csrf
+                        @method("DELETE")
+                        <button type="submit" class="like-btn liked" aria-pressed="true">
+                            <i class="fa-solid fa-star"></i>
+                            {{-- fa-solid 塗りつぶしあり aria-pressed = true = すでに押された状態 --}}
+                        </button>
+                    </form>
+                @else
+                    {{-- いいねまだ --}}
+                    <form method="POST" action="{{ route("favorite.store", ["item" => $item->id]) }}">
+                        @csrf
 
-                @auth
-                    @if ($isFavorited)
-                        <form method="POST" action="{{ route("favorite.destroy", ["item_id" => $item->id]) }}">
-                            @csrf
-                            @method("DELETE")
-                            <button type="submit" class="like-btn liked" aria-pressed="true">
-                                <i class="fa-solid fa-heart"></i>
-                                {{-- 塗りつぶし＆色付き --}}
-                            </button>
-                        </form>
-                    @else
-                        <form method="POST" action="{{ route("favorite.store", ["item_id" => $item->id]) }}">
-                            @csrf
-                            <button type="submit" class="like-btn" aria-pressed="false">
-                                <i class="fa-regular fa-heart"></i>
-                                {{-- 反転アイコン --}}
-                            </button>
-                        </form>
-                    @endif
-                @endauth
+                        <button type="submit" class="like-btn unliked" aria-pressed="false">
+                            <i class="fa-regular fa-star"></i>
+                            {{-- fa-regular 枠だけ塗りつぶしなし aria-pressed = false = まだ押されてない状態 --}}
+                        </button>
+                    </form>
+                @endif
+                {{-- いいね数 --}}
+                <span class="like-count">{{ $favoritesCount }}</span>
             </div>
 
-            <form action="{{ route("purchase.show", $item) }}" method="POST">
-                @csrf
-                <button class="btn btn--primary">購入手続きへ</button>
-            </form>
+            <a class="link--purchase" href="{{ route("purchase.show", ["item" => $item->id]) }}">購入手続きへ</a>
 
             <section class="product__section">
                 <h2 class="product__heading">商品の説明</h2>
@@ -79,6 +75,43 @@
                         <span>{{ $item->condition }}</span>
                     </li>
                 </ul>
+                {{-- 商品の状態 --}}
+                {{-- コメント一覧 --}}
+                <div class="comment-list">
+                    @if (isset($comments) && $comments->count())
+                        @foreach ($comments as $comment)
+                            <div class="comment__header">
+                                {{-- 投稿者画像 --}}
+                                <div class="avatar-path__group">
+                                    @php
+                                        $avatar = optional($comment->user->profile)->avatar_path;
+                                    @endphp
+
+                                    @if ($avatar)
+                                        <img class="avatar" src="{{ asset("storage/" . $avatar) }}" alt="プロフィール画像" />
+                                    @endif
+                                </div>
+                                {{-- ユーザー名（投稿者） --}}
+                                <h2 class="profile__name">{{ $comment->user->name }}</h2>
+                            </div>
+                            {{-- 本文 --}}
+                            <p class="comment__body">{{ $comment->body }}</p>
+                        @endforeach
+                    @else
+                        <p class="comment__empty">まだコメントはありません</p>
+                    @endif
+                </div>
+                {{-- コメントフォーム --}}
+                <p>商品へのコメント</p>
+                <form method="POST" action="{{ route("comments.store", ["item" => $item->id]) }}">
+                    @csrf
+                    <textarea name="body" rows="4" cols="30">{{ old("body") }}</textarea>
+                    @error("body")
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+
+                    <button type="submit" class="btn btn--primary">コメントを送信する</button>
+                </form>
             </section>
         </div>
     </section>

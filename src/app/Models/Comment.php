@@ -10,10 +10,9 @@ use App\Models\User;
 class Comment extends Model
 {
     use HasFactory;
-
-    //単体テストのユースケースはリレーション経由でコメントする場合のみの為外部キーは除外
     protected $fillable = [
         'body',
+        'user_id'
     ];
 
     // Comment(Child)はItem(Parent)に属する = belongsTo
