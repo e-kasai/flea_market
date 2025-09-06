@@ -59,4 +59,15 @@ class Item extends Model
     {
         return $this->belongsToMany(User::class, 'favorites', 'item_id', 'user_id');
     }
+
+    //アクセサ
+    public function getConditionLabelAttribute()
+    {
+        return match ($this->condition) {
+            0 => '状態が悪い',
+            1 => 'やや傷や汚れあり',
+            2 => '目立った傷や汚れなし',
+            3 => '良好',
+        };
+    }
 }

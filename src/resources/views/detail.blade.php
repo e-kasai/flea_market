@@ -64,7 +64,7 @@
 
             <section class="product__section">
                 <h2 class="product__heading">商品の情報</h2>
-                {{-- 例：カテゴリなど --}}
+                {{-- カテゴリ --}}
                 <ul class="kv">
                     <li>
                         <span>カテゴリ</span>
@@ -72,13 +72,15 @@
                     </li>
                     <li>
                         <span>状態</span>
-                        <span>{{ $item->condition }}</span>
+                        <span>{{ $item->condition_label }}</span>
                     </li>
                 </ul>
                 {{-- 商品の状態 --}}
                 {{-- コメント一覧 --}}
                 <div class="comment-list">
                     @if (isset($comments) && $comments->count())
+                        {{-- コメント数 --}}
+                        <h2 class="product__heading">コメント（{{ $comments->count() }}）</h2>
                         @foreach ($comments as $comment)
                             <div class="comment__header">
                                 {{-- 投稿者画像 --}}
@@ -98,7 +100,7 @@
                             <p class="comment__body">{{ $comment->body }}</p>
                         @endforeach
                     @else
-                        <p class="comment__empty">まだコメントはありません</p>
+                        <p class="comment__empty">こちらにコメントが入ります。</p>
                     @endif
                 </div>
                 {{-- コメントフォーム --}}
