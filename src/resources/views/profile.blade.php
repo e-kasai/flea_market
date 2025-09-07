@@ -10,14 +10,15 @@
         <img
             class="avatar"
             src="{{
-                $userProfile->avatar_path
-                    ? asset("storage/" . $userProfile->avatar_path)
+                $profile->avatar_path
+                    ? asset("storage/" . $profile->avatar_path)
                     : asset("img/dog.jpg")
             }}"
             alt="プロフィール画像"
         />
         {{-- ユーザー名 --}}
-        <h1 class="profile__name">{{ $currentUser->name }}</h1>
+        <h1 class="profile__name">{{ $user->name }}</h1>
+
         {{-- プロフィールを編集 --}}
         <a class="profile__link-edit" href="{{ route("profile.edit") }}">プロフィールを編集</a>
     </section>

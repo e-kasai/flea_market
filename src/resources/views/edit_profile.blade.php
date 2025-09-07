@@ -8,15 +8,9 @@
 @section("content")
     <x-form.card title="プロフィール設定" action="{{ route('profile.update') }}" method="PATCH" enctype="multipart/form-data">
         {{-- プロフィール画像 --}}
-        {{-- 修正１：avatar -> avatar_path --}}
         <div class="avatar-path__group">
-            @if ($userProfile->avatar_path)
-                <img
-                    class="avatar"
-                    {{-- 修正２：storage/material_images -> storage/ --}}
-                    src="{{ asset("storage/" . $userProfile->avatar_path) }}"
-                    alt="プロフィール画像"
-                />
+            @if ($profile->avatar_path)
+                <img class="avatar" src="{{ asset("storage/" . $profile->avatar_path) }}" alt="プロフィール画像" />
             @endif
 
             {{-- 画像選択リンク --}}
@@ -35,22 +29,21 @@
         </div>
         {{-- ここから下がcard.blade.phpの$slotに入る --}}
         {{-- 名前 --}}
-        <x-form.input type="text" name="name" label="ユーザー名" value="{{ old('name',$currentUser->name)}}" required />
+        <x-form.input type="text" name="name" label="ユーザー名" value="{{ old('name',$user->name)}}" required />
         {{-- 郵便番号 --}}
         <x-form.input
             type="text"
             name="postal_code"
             label="郵便番号"
-            value="{{ old('postal_code', $userProfile->postal_code) }}"
+            value="{{ old('postal_code', $profile->postal_code) }}"
             required
         />
         {{-- 住所 --}}
-        <x-form.input type="text" name="address" label="住所" value="{{ old('address', $userProfile->address) }}" required />
+        <x-form.input type="text" name="address" label="住所" value="{{ old('address', $profile->address) }}" required />
         {{-- 建物名 --}}
-        <x-form.input type="text" name="building" label="建物名" value="{{ old('building', $userProfile->building) }}" required />
+        <x-form.input type="text" name="building" label="建物名" value="{{ old('building', $profile->building) }}" />
         <x-slot name="actions">
             <button class="btn" type="submit">更新する</button>
         </x-slot>
-        {{-- ここまでが$slotに入る --}}
     </x-form.card>
 @endsection
