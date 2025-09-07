@@ -10,14 +10,24 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
+        $userId = auth()->id();
         $keyword = $request->get('keyword');
         //tab指定がない場合のデフォルトはおすすめタブ
         $activeTab = $request->get('tab', 'recommend');
 
-        // おすすめ（検索条件があれば絞り込み）
-        $items = Item::when($keyword, function ($query, $keyword) {
-            return $query->where('item_name', 'LIKE', "%{$keyword}%");
-        })->get();
+        // おすすめタブ
+        //自分が出品した商品を除外
+        $items = Item::query()
+            ->where('seller_id', '<>', $userId)
+            ->when($keyword, fn($query, $keyword) => $query->where('item_name', 'LIKE', "%{$keyword}%"))
+            ->latest()
+            ->get();
+
+        // 検索条件があれば絞り込み
+        // $keyword = $request->get('keyword');
+        // $items = Item::when($keyword, function ($query, $keyword) {
+        //     return $query->where('item_name', 'LIKE', "%{$keyword}%");
+        // })->get();
 
 
         // マイリストはログイン状態の場合のみ表示
