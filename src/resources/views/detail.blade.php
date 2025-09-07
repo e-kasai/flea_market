@@ -32,7 +32,7 @@
             <div class="like-area">
                 @if ($isFavorited)
                     {{-- いいね済み --}}
-                    <form method="POST" action="{{ route("favorite.destroy", ["item" => $item->id]) }}">
+                    <form method="POST" action="{{ route("favorite.destroy", $item) }}">
                         @csrf
                         @method("DELETE")
                         <button type="submit" class="like-btn liked" aria-pressed="true">
@@ -42,7 +42,7 @@
                     </form>
                 @else
                     {{-- いいねまだ --}}
-                    <form method="POST" action="{{ route("favorite.store", ["item" => $item->id]) }}">
+                    <form method="POST" action="{{ route("favorite.store", $item) }}">
                         @csrf
 
                         <button type="submit" class="like-btn unliked" aria-pressed="false">
@@ -54,8 +54,20 @@
                 {{-- いいね数 --}}
                 <span class="like-count">{{ $favoritesCount }}</span>
             </div>
+            <div>
+                <button type="submit" class="comment-btn" aria-pressed="false">
+                    <i class="fa-regular fa-comment"></i>
+                </button>
+                {{-- コメント数 --}}
 
-            <a class="link--purchase" href="{{ route("purchase.show", ["item" => $item->id]) }}">購入手続きへ</a>
+                @if (isset($comments) && $comments->count())
+                    <span class="comments-count">{{ $comments->count() }}</span>
+                @else
+                    <p>{{ "0" }}</p>
+                @endif
+            </div>
+
+            <a class="link--purchase" href="{{ route("purchase.show", $item) }}">購入手続きへ</a>
 
             <section class="product__section">
                 <h2 class="product__heading">商品の説明</h2>
@@ -78,12 +90,12 @@
                 {{-- 商品の状態 --}}
                 {{-- コメント一覧 --}}
                 <div class="comment-list">
+                    {{-- コメント数 --}}
                     @if (isset($comments) && $comments->count())
-                        {{-- コメント数 --}}
-                        <h2 class="product__heading">コメント（{{ $comments->count() }}）</h2>
+                        <h2 class="product__heading">コメント（{{ $comments->count() }})</h2>
                         @foreach ($comments as $comment)
+                            {{-- 投稿者情報 --}}
                             <div class="comment__header">
-                                {{-- 投稿者画像 --}}
                                 <div class="avatar-path__group">
                                     @php
                                         $avatar = optional($comment->user->profile)->avatar_path;
@@ -93,7 +105,6 @@
                                         <img class="avatar" src="{{ asset("storage/" . $avatar) }}" alt="プロフィール画像" />
                                     @endif
                                 </div>
-                                {{-- ユーザー名（投稿者） --}}
                                 <h2 class="profile__name">{{ $comment->user->name }}</h2>
                             </div>
                             {{-- 本文 --}}
@@ -105,7 +116,7 @@
                 </div>
                 {{-- コメントフォーム --}}
                 <p>商品へのコメント</p>
-                <form method="POST" action="{{ route("comments.store", ["item" => $item->id]) }}">
+                <form method="POST" action="{{ route("comments.store", $item) }}">
                     @csrf
                     <textarea name="body" rows="4" cols="30">{{ old("body") }}</textarea>
                     @error("body")
