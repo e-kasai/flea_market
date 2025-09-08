@@ -1,0 +1,64 @@
+/* グリッド全体 */
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(100px, 25vw, 290px), 1fr));
+    gap: clamp(1rem, 4vw, 4.4rem);
+    padding: clamp(0.5rem, 2vw, 1rem);
+    justify-content: center;
+    margin: 0 clamp(1rem, 4vw, 4.4rem);
+}
+
+/* 各カード */
+.item-card {
+    overflow: hidden;
+    background: #fff;
+    text-align: left;
+    transition: transform 0.2s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 詳細リンク */
+.link-details {
+    text-decoration: none;
+}
+
+/* 商品画像 */
+.item-card__img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #d9d9d9;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* 商品名 */
+.item-card__name {
+    font-size: clamp(0.8rem, 2vw, 2.5rem);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: 400;
+    padding: 0.5rem;
+    margin: clamp(0.2rem, 1vh, 0.4rem) 0;
+    color: #000000;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+/* SOLDラベル */
+.item-card__sold {
+    display: inline-block;
+    margin-left: clamp(0.8rem, 1vw, 1.2rem);
+    padding: clamp(0.2rem, 1vw, 0.4rem) clamp(1rem, 3vw, 2rem);
+    font-size: clamp(0.7rem, 2vw, 4rem);
+    font-weight: bold;
+    color: #fff;
+    background-color: #d9534f;
+    border-radius: 5px;
+}
