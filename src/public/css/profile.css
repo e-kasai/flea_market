@@ -6,7 +6,6 @@
 .avatar-path__group {
     display: flex;
     align-items: center;
-    /* gap: 2.5rem; */
     gap: clamp(1.6rem, 4vw, 2.5rem);
 }
 
@@ -19,6 +18,7 @@
     aspect-ratio: 1 / 1; /* 正方形維持 */
     border: 2px solid #ccc;
     display: block;
+    margin-left: clamp(2rem, 10vw, 15rem);
 }
 
 /* プロフィール画像選択 */
@@ -62,34 +62,70 @@
 .profile {
     display: flex;
     align-items: center;
-    /* gap: clamp(5rem, 4vw, 10rem); */
+
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    gap: clamp(1rem, 3vw, 2rem);
+    /* margin: clamp(1rem, 2vw, 2rem); */
+
+    margin: clamp(1rem, 2vw, 2rem) auto;
+    padding-inline: clamp(5rem, 8vw, 15rem);
+}
+
+.profile__info {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 200px;
 }
 
 /* ユーザー名 */
 .profile__name {
-    font-size: clamp(2rem, 2vw, 6rem);
-    margin: 0 clamp(2rem, 6vw, 6rem) 0 clamp(1rem, 3vw, 2rem);
+    font-size: clamp(2rem, 2vw, 5rem);
+    margin-left: clamp(2rem, 4vw, 10rem);
 }
 
 /* プロフィールを編集リンク */
+.profile__link {
+    flex: 0 0 auto;
+}
+
 /* ボタン風リンク */
 .profile__link-edit {
     display: inline-block;
     padding: clamp(0.8rem, 2vw, 1rem) clamp(1.6rem, 4vw, 2rem);
     font-size: clamp(1rem, 2vw, 1.6rem);
-    border: 2px solid #ff6b6b;
+    border: 2px solid #ff5555;
     border-radius: 6px;
     background-color: #fff;
-    color: #ff6b6b;
+    color: #ff5555;
     font-weight: bold;
     text-decoration: none;
     text-align: center;
+    white-space: nowrap;
     transition:
         background 0.2s,
         color 0.2s;
 }
 
 .profile__link-edit:hover {
-    background: #ff6b6b;
+    background: #ff5555;
     color: #fff;
+}
+
+@media (max-width: 600px) {
+    .profile {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .profile__link {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .profile__link-edit {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
 }

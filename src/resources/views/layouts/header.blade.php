@@ -25,7 +25,7 @@
             @endauth
             <a class="nav__link nav__link--mypage" href="{{ route("profile.show") }}">マイページ</a>
             {{-- 後でコメントアウト外す、ルート設定後 --}}
-            {{-- <a class="nav__link nav__link--sell" href="{{ route("exhibit.show") }}">出品</a> --}}
+            <a class="nav__link nav__link--sell" href="{{ "/sell" }}">出品</a>
         </nav>
     @endunless
 </header>
