@@ -128,7 +128,7 @@ HEADER
     cursor: pointer;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .header {
         grid-template-columns: auto 1fr;
         grid-template-rows: auto auto;

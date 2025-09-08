@@ -1,0 +1,41 @@
+/* タブ帯（上下の線だけ全幅） */
+.tabs {
+    border-bottom: 2px solid #5f5f5f; /* 下線で区切り */
+    margin-bottom: clamp(2.5rem, 3vw, 5rem);
+}
+
+/* タブ全体 */
+.tabs__nav {
+    display: flex;
+    gap: clamp(3rem, 3vw, 6rem);
+    padding: clamp(0rem, 0.5vh, 0.8rem) clamp(1rem, 1vw, 5rem);
+    padding: 0px 5px;
+    margin-top: clamp(0.4rem, 1vh, 3rem);
+    margin-left: clamp(2rem, 10vw, 30rem);
+}
+
+/* タブリンク */
+.tabs__nav a {
+    text-decoration: none;
+    font-size: clamp(0.7rem, 2vw, 4rem);
+    white-space: nowrap;
+    overflow: visible;
+    color: #5f5f5f;
+    font-weight: 700;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition:
+        color 0.2s,
+        border-color 0.2s;
+}
+
+/* ホバー時 */
+.tabs__nav a:hover {
+    color: #000;
+}
+
+/* アクティブタブ */
+.tabs__nav a.is-active {
+    font-weight: bold;
+    color: #ff0000;
+}
