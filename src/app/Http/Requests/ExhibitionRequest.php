@@ -24,7 +24,7 @@ class ExhibitionRequest extends FormRequest
             'category_ids'   => ['required', 'array', 'min:1'],
             //各要素に対してのルール（整数、重複禁止、存在カテゴリ）
             'category_ids.*' => ['integer', 'distinct', 'exists:categories,id'],
-            'condition' => ['required', 'integer'],
+            'condition' => ['required', 'in:0,1,2,3'],
             'price' => ['required', 'integer', 'min:0'],
         ];
     }
@@ -54,15 +54,15 @@ class ExhibitionRequest extends FormRequest
 
             // category_ids
             'category_ids.required'   => 'カテゴリを1つ以上選択してください。',
-            'category_ids.array'        => 'カテゴリを1つ以上選択してください。',
+            'category_ids.array'      => 'カテゴリを1つ以上選択してください。',
             'category_ids.min'        => 'カテゴリを1つ以上選択してください。',
             'category_ids.*.integer'  => 'カテゴリを選択肢から選んでください。',
             'category_ids.*.distinct' => '同じカテゴリは重複選択できません。',
             'category_ids.*.exists'   => '表示されているカテゴリから選んでください。',
 
             // condition
-            'condition.required' => '商品の状態を選択してください。',
-            'condition.integer' => '商品の状態を選択してください。',
+            'condition.required'      => '商品の状態を選択してください。',
+            'condition.in'            => '商品の状態を選択してください。',
 
             // price
             'price.required' => '価格を入力してください。',
