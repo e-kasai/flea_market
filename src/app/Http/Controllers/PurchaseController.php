@@ -25,16 +25,14 @@ class PurchaseController extends Controller
         // UI側で購入ボタンを無効化するためのフラグ
         $canPurchase            = (bool) $profile;
 
-        //ここから追加
-
         // セッションに保存されていなければ新しいから配列を返す
-        $updatedAddress = session("updated_address.{$item->id}", []);
+        $draftAddress = session("draft_address.{$item->id}", []);
 
-        // 想定キーだけに限定（予期せぬキー混入ガード）
-        $updatedAddress = array_intersect_key($updatedAddress, $originalAddress);
+        // 想定キーだけに限定（予期せぬキーの混入防止）
+        $draftAddress = array_intersect_key($draftAddress, $originalAddress);
 
-        // 差分merge：updatedAddressが優先（buildingはnull時、nullで上書き）
-        $shipping = array_replace($originalAddress, $updatedAddress);
+        // 差分merge：draftAddressが優先（buildingはnull時、nullで上書きOK）
+        $shipping = array_replace($originalAddress, $draftAddress);
 
         return view('purchase', compact('item', 'profile', 'shipping', 'canPurchase'));
     }
@@ -58,23 +56,23 @@ class PurchaseController extends Controller
         if ($item->seller_id === $user->id) {
             return back()->with('message', '自分の商品は購入できません。');
         }
-        // すでに売れたものは買えない
+        // 売れたものは買えない
         if ($item->is_sold ?? false) {
             return back()->with('message', 'この商品は売り切れです。');
         }
 
-
-        //配送先合成
+        //配送先変更あればmerge
         $originalAddress = [
             'postal_code' => $profile?->postal_code,
             'address'     => $profile?->address,
             'building'    => $profile?->building,
         ];
-        $updatedAddress = session("updated_address.{$item->id}", []);
-        $updatedAddress = array_intersect_key($updatedAddress, $originalAddress);
-        $shipping = array_replace($originalAddress, $updatedAddress);
 
-        //上記のifにあてはまらない場合のみ購入処理
+        $draftAddress = session("draft_address.{$item->id}", []);
+        $draftAddress = array_intersect_key($draftAddress, $originalAddress);
+        $shipping = array_replace($originalAddress, $draftAddress);
+
+        //購入処理
         DB::transaction(
             function () use ($item, $user, $shipping, $request) {
                 // 同時購入を防止
@@ -98,7 +96,7 @@ class PurchaseController extends Controller
             }
         );
         // 使い終わったドラフトは掃除
-        session()->forget("updated_address.{$item->id}");
+        session()->forget("draft_address.{$item->id}");
 
         return redirect()->route('items.index')
             ->with('message', '購入が完了しました。');
@@ -110,7 +108,7 @@ class PurchaseController extends Controller
         $user = auth()->user();
         $profile = $user->profile;
 
-        $draft = session("updated_address.{$item->id}", []);
+        $draft = session("draft_address.{$item->id}", []);
 
         $form = [
             'postal_code' => $draft['postal_code'] ?? $profile?->postal_code,
@@ -130,10 +128,10 @@ class PurchaseController extends Controller
 
         $validated = $request->validated();
 
-        //sessionに新しい配送先を一時保存 key名= updated_address.idの値
+        //sessionに新しい配送先を一時保存 key名= draft_address.idの値
         session()->put(
-            "updated_address.{$item->id}",[
-
+            "draft_address.{$item->id}",
+            [
                 'postal_code' => $validated['postal_code'],
                 'address'     => $validated['address'],
                 'building'    => $validated['building'] ?? null,
@@ -141,7 +139,7 @@ class PurchaseController extends Controller
         );
 
         return redirect()
-        ->route('purchase.show',$item)
-        ->with('message','配送先を変更しました');
+            ->route('purchase.show', $item)
+            ->with('message', '配送先を変更しました');
     }
 }
