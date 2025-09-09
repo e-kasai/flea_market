@@ -43,29 +43,10 @@ Route::prefix('sell')
         Route::post('/', [ExhibitController::class, 'storeExhibitItem'])->name('exhibit.store');
     });
 
-//商品詳細
-// Route::get('/item/{item_id}', [ItemController::class, 'showItemDetail'])
-//     ->name('details.show');
 
 //商品詳細
 Route::get('/item/{item}', [ItemController::class, 'showItemDetail'])
     ->name('details.show');
-
-
-//コメント、いいね機能
-// Route::prefix('item')
-//     ->middleware('auth')
-//     ->group(function () {
-//         //コメント
-//         Route::post('/{item_id}/comment', [CommentController::class, 'storeComment'])
-//             ->name('comments.store');
-//         //いいね追加
-//         Route::post('/{item_id}/favorite', [FavoriteController::class, 'setItemFavorite'])
-//             ->name('favorite.store');
-//         //いいね解除
-//         Route::delete('/{item_id}/favorite', [FavoriteController::class, 'setItemUnfavorite'])
-//             ->name('favorite.destroy');
-//     });
 
 
 //コメント、いいね機能
@@ -84,9 +65,19 @@ Route::prefix('item')
     });
 
 
-
-
 //購入機能
 //購入画面表示
-// Route::get('/purchase/{item_id}', [PurchaseController::class, 'showPurchasePage'])->name('purchase.show')->middleware('auth');
-Route::get('/purchase/{item}', [PurchaseController::class, 'showPurchasePage'])->name('purchase.show')->middleware('auth');
+Route::prefix('purchase')
+    ->middleware('auth')
+    ->group(function () {
+        Route::get('/{item}', [PurchaseController::class, 'showPurchasePage'])->name('purchase.show');
+        Route::post('/{item}', [PurchaseController::class, 'purchaseItem'])->name('purchase.item');
+    });
+
+//配送先変更
+Route::prefix('purchase')
+    ->middleware('auth')
+    ->group(function () {
+        Route::get('/address/{item}', [PurchaseController::class, 'showShippingAddress'])->name('address.show');
+        Route::patch('/address/{item}', [PurchaseController::class, 'updateShippingAddress'])->name('address.update');
+    });

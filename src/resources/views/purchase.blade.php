@@ -49,11 +49,11 @@
             </div>
 
             <p>配送先</p>
-            <a href="route{{ "address.show" }}">変更する</a>
+            <a href="{{ route("address.show",$item) }}">変更する</a>
             {{-- 配送先の表示（プロフィールで登録した住所） --}}
-            <p>{{ $shipping_postal_code }}</p>
-            <p>{{ $shipping_address }}</p>
-            <p>{{ $shipping_building }}</p>
+            <p>{{ $shipping['postal_code'] ?? '' }}</p>
+            <p>{{ $shipping['address'] ?? ''}}</p>
+            <p>{{ $shipping['building'] ?? ''}}</p>
 
             @if (! $canPurchase)
                 <p class="alert">
