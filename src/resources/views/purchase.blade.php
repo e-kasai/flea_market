@@ -35,13 +35,13 @@
             </p>
             {{-- 支払い方法セレクトボックス --}}
             <div>
-                <label for="payment-method"><span>支払い方法</span></label>
+                <label for="payment_method"><span>支払い方法</span></label>
                 <br />
 
-                <select id="payment-method" name="payment_method" required>
-                    <option value="">選択してください</option>
-                    <option value="1" @selected(old("payment_method") === "1")>コンビニ払い</option>
-                    <option value="2" @selected(old("payment_method") === "2")>カード支払い</option>
+                <select name="payment_method" id="payment_method" required>
+                    <option value="" disabled hidden {{ old("payment_method") ? "" : "selected" }}>選択してください</option>
+                    <option value="1" {{ old("payment_method") === "1" ? "selected" : "" }}>コンビニ払い</option>
+                    <option value="2" {{ old("payment_method") === "2" ? "selected" : "" }}>カード支払い</option>
                 </select>
                 @error("payment_method")
                     <div>{{ $message }}</div>
@@ -49,11 +49,11 @@
             </div>
 
             <p>配送先</p>
-            <a href="{{ route("address.show",$item) }}">変更する</a>
+            <a href="{{ route("address.show", $item) }}">変更する</a>
             {{-- 配送先の表示（プロフィールで登録した住所） --}}
-            <p>{{ $shipping['postal_code'] ?? '' }}</p>
-            <p>{{ $shipping['address'] ?? ''}}</p>
-            <p>{{ $shipping['building'] ?? ''}}</p>
+            <p>{{ $shipping["postal_code"] ?? "" }}</p>
+            <p>{{ $shipping["address"] ?? "" }}</p>
+            <p>{{ $shipping["building"] ?? "" }}</p>
 
             @if (! $canPurchase)
                 <p class="alert">
@@ -65,14 +65,52 @@
 
             {{-- ここから画面右側の領域 --}}
             {{-- 商品代金 = 価格 --}}
-            <p>
-                ¥{{ number_format($item->price) }}
-                <small>（税込）</small>
+            <p>¥{{ number_format($item->price) }}</p>
+            {{-- 支払い方法のプレビュー --}}
+            @php
+                // ラベル表
+                $paymentLabels = [
+                    0 => "選択してください",
+                    1 => "コンビニ払い",
+                    2 => "カード支払い",
+                ];
+            @endphp
+
+            <p id="payment_preview">
+                {{ old("payment_method") ? $paymentLabels[(int) old("payment_method")] ?? "未選択" : "未選択" }}
             </p>
-            {{-- 支払い方法 = 選んだやつ --}}
+
             {{-- 購入ボタン --}}
 
             <button type="submit" {{ $canPurchase ? "" : "disabled" }}>購入する</button>
         </form>
     </section>
 @endsection
+
+@push("scripts")
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const select = document.getElementById('payment_method');
+            const preview = document.getElementById('payment_preview');
+
+            if (!select || !preview) return; // 念のため
+
+            // value→ラベルの対応（Blade側と一致）
+            const labels = {
+                1: 'コンビニ払い',
+                2: 'カード支払い',
+            };
+
+            const update = () => {
+                const val = select.value;
+                preview.textContent = labels[val] ?? '未選択';
+            };
+
+            // 初期表示（old値反映）
+            update();
+
+            // 変更即時反映
+            select.addEventListener('change', update);
+        });
+    </script>
+@endpush
