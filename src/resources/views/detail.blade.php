@@ -17,9 +17,7 @@
 
     <section class="product">
         {{-- 左：画像 --}}
-        <div class="product__media">
-            <img src="{{ $img }}" alt="{{ $item->item_name }}" class="product__img" />
-        </div>
+        <img class="product__img" src="{{ $img }}" alt="{{ $item->item_name }}" />
 
         {{-- 右：テキスト系コンテンツ --}}
         <div class="product__body">
@@ -29,42 +27,39 @@
                 ¥{{ number_format($item->price) }}
                 <small>（税込）</small>
             </p>
-            <div class="like-area">
-                @if ($isFavorited)
-                    {{-- いいね済み --}}
-                    <form method="POST" action="{{ route("favorite.destroy", $item) }}">
-                        @csrf
-                        @method("DELETE")
-                        <button type="submit" class="like-btn liked" aria-pressed="true">
-                            <i class="fa-solid fa-star"></i>
-                            {{-- fa-solid 塗りつぶしあり aria-pressed = true = すでに押された状態 --}}
-                        </button>
-                    </form>
-                @else
-                    {{-- いいねまだ --}}
-                    <form method="POST" action="{{ route("favorite.store", $item) }}">
-                        @csrf
+            <div class="icons">
+                <div class="like">
+                    @if ($isFavorited)
+                        {{-- いいね済み --}}
+                        <form method="POST" action="{{ route("favorite.destroy", $item) }}">
+                            @csrf
+                            @method("DELETE")
+                            <button type="submit" class="icon-btn" aria-pressed="true">
+                                <i class="fa-solid fa-star"></i>
+                                {{-- fa-solid 塗りつぶしあり aria-pressed = true = すでに押された状態 --}}
+                            </button>
+                        </form>
+                    @else
+                        {{-- いいねまだ --}}
+                        <form method="POST" action="{{ route("favorite.store", $item) }}">
+                            @csrf
 
-                        <button type="submit" class="like-btn unliked" aria-pressed="false">
-                            <i class="fa-regular fa-star"></i>
-                            {{-- fa-regular 枠だけ塗りつぶしなし aria-pressed = false = まだ押されてない状態 --}}
-                        </button>
-                    </form>
-                @endif
-                {{-- いいね数 --}}
-                <span class="like-count">{{ $favoritesCount }}</span>
-            </div>
-            <div>
-                <button type="submit" class="comment-btn" aria-pressed="false">
-                    <i class="fa-regular fa-comment"></i>
-                </button>
-                {{-- コメント数 --}}
-
-                @if (isset($comments) && $comments->count())
-                    <span class="comments-count">{{ $comments->count() }}</span>
-                @else
-                    <p>{{ "0" }}</p>
-                @endif
+                            <button type="submit" class="icon-btn" aria-pressed="false">
+                                <i class="fa-regular fa-star"></i>
+                                {{-- fa-regular 枠だけ塗りつぶしなし aria-pressed = false = まだ押されてない状態 --}}
+                            </button>
+                        </form>
+                    @endif
+                    {{-- いいね数 --}}
+                    <span class="count">{{ $favoritesCount }}</span>
+                </div>
+                <div class="comment">
+                    <button type="submit" class="icon-btn" aria-pressed="false">
+                        <i class="fa-regular fa-comment"></i>
+                    </button>
+                    {{-- コメント数 --}}
+                    <span class="count">{{ $comments->count() ?? 0 }}</span>
+                </div>
             </div>
 
             <a class="link--purchase" href="{{ route("purchase.show", $item) }}">購入手続きへ</a>
@@ -77,14 +72,18 @@
             <section class="product__section">
                 <h2 class="product__heading">商品の情報</h2>
                 {{-- カテゴリ --}}
-                <ul class="kv">
+                <ul class="product__details">
                     <li>
-                        <span>カテゴリ</span>
-                        <span>{{ $item->categories->pluck("category_name")->join(" ") }}</span>
+                        <span class="key">カテゴリ</span>
+                        <span class="value category">
+                            @foreach ($item->categories as $categoryName)
+                                <span class="chip">{{ $categoryName->category_name }}</span>
+                            @endforeach
+                        </span>
                     </li>
                     <li>
-                        <span>状態</span>
-                        <span>{{ $item->condition_label }}</span>
+                        <span class="key">商品の状態</span>
+                        <span class="value condition">{{ $item->condition_label }}</span>
                     </li>
                 </ul>
                 {{-- 商品の状態 --}}
@@ -92,30 +91,27 @@
                 <div class="comment-list">
                     {{-- コメント数 --}}
                     @if (isset($comments) && $comments->count())
-                        <h2 class="product__heading">コメント（{{ $comments->count() }})</h2>
+                        <h2 class="product__heading">コメント({{ $comments->count() }})</h2>
                         @foreach ($comments as $comment)
                             {{-- 投稿者情報 --}}
-                            <div class="comment__header">
-                                <div class="avatar-path__group">
-                                    @php
-                                        $avatar = optional($comment->user->profile)->avatar_path;
-                                    @endphp
+                            <div class="comment__users">
+                                @php
+                                    $avatar = optional($comment->user->profile)->avatar_path;
+                                    $avatarPath = $avatar ? asset("storage/" . $avatar) : asset("img/noimage.png");
+                                @endphp
 
-                                    @if ($avatar)
-                                        <img class="avatar" src="{{ asset("storage/" . $avatar) }}" alt="プロフィール画像" />
-                                    @endif
-                                </div>
-                                <h2 class="profile__name">{{ $comment->user->name }}</h2>
+                                <img class="comment__users-avatar" src="{{ $avatarPath }}" alt="プロフィール画像" />
+                                <p class="comment__user-name">{{ $comment->user->name }}</p>
                             </div>
                             {{-- 本文 --}}
                             <p class="comment__body">{{ $comment->body }}</p>
                         @endforeach
                     @else
-                        <p class="comment__empty">こちらにコメントが入ります。</p>
+                        <p class="product__heading">コメント(0)</p>
                     @endif
                 </div>
                 {{-- コメントフォーム --}}
-                <p>商品へのコメント</p>
+                <p class="comment-form__title">商品へのコメント</p>
                 <form method="POST" action="{{ route("comments.store", $item) }}">
                     @csrf
                     <textarea name="body" rows="4" cols="30">{{ old("body") }}</textarea>
@@ -123,7 +119,7 @@
                         <p class="form-error">{{ $message }}</p>
                     @enderror
 
-                    <button type="submit" class="btn btn--primary">コメントを送信する</button>
+                    <button type="submit" class="btn">コメントを送信する</button>
                 </form>
             </section>
         </div>

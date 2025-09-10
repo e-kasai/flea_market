@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment;
 use App\Models\Category;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class Item extends Model
 {
@@ -61,6 +62,7 @@ class Item extends Model
     }
 
     //アクセサ
+    // conditionを文字列に変換
     public function getConditionLabelAttribute()
     {
         return match ($this->condition) {
@@ -69,5 +71,13 @@ class Item extends Model
             2 => '目立った傷や汚れなし',
             3 => '良好',
         };
+    }
+
+    //画像パスがS3か相対パスか判定する
+    public function getImageUrlAttribute(): string
+    {
+        return Str::startsWith($this->image_path, ['http://', 'https://']) //httpなどから始まる(条件)
+            ? $this->image_path                     // S3などの完成したURLならそのまま返す(true)
+            : asset('storage/' . $this->image_path); // 相対パスなら公開URLに変換(false)
     }
 }

@@ -128,6 +128,7 @@ HEADER
     cursor: pointer;
 }
 
+
 @media (max-width: 768px) {
     .header {
         grid-template-columns: auto 1fr;
@@ -149,7 +150,7 @@ HEADER
     }
 
     .search__input {
-        width: min(92vw, 64rem); /* 画面の92%〜最大640px */
+        width: min(92vw, 64rem);
         margin: 0 auto;
         font-size: clamp(1.5rem, 4vw, 1.9rem);
         padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1.2rem, 3vw, 2rem);

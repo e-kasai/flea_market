@@ -52,6 +52,7 @@
 .avatar-path__label:hover {
     background: #ff6b6b;
     color: #fff;
+    cursor: pointer;
 }
 
 /*---------------------------------
@@ -112,6 +113,7 @@
 .profile__link-edit:hover {
     background: #ff5555;
     color: #fff;
+    cursor: pointer;
 }
 
 @media (max-width: 600px) {

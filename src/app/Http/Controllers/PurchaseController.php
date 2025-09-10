@@ -72,7 +72,7 @@ class PurchaseController extends Controller
         $draftAddress = array_intersect_key($draftAddress, $originalAddress);
         $shipping = array_replace($originalAddress, $draftAddress);
 
-        //購入処理
+        //上記のifにあてはまらない場合のみ購入処理
         DB::transaction(
             function () use ($item, $user, $shipping, $request) {
                 // 同時購入を防止

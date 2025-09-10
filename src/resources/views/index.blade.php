@@ -3,36 +3,36 @@
 @push("styles")
     {{-- 後で設定 --}}
     <link rel="stylesheet" href="{{ asset("css/grid.css") }}" />
+    <link rel="stylesheet" href="{{ asset("css/tab.css") }}" />
 @endpush
 
 @section("content")
-    <section class="tabs">
-        {{-- タブでおすすめ、マイリストを切り替え --}}
-        {{-- タブ切り替えリンク --}}
-        @php
-            $tabs = [
-                ["label" => "おすすめ", "href" => request()->fullUrlWithQuery(["tab" => "recommend"]), "active" => $activeTab === "recommend" ? "is-active" : ""],
-                ["label" => "マイリスト", "href" => request()->fullUrlWithQuery(["tab" => "mylist"]), "active" => $activeTab === "mylist"],
-            ];
-        @endphp
+    @php
+        $tabs = [
+            ["label" => "おすすめ", "href" => request()->fullUrlWithQuery(["tab" => "recommend"]), "active" => $activeTab === "recommend" ? "is-active" : ""],
+            ["label" => "マイリスト", "href" => request()->fullUrlWithQuery(["tab" => "mylist"]), "active" => $activeTab === "mylist"],
+        ];
+    @endphp
 
+    <nav class="tabs">
         <x-tabs.nav :items="$tabs" />
-        <div class="tabs__switch">
-            {{-- おすすめ一覧 --}}
-            @if ($activeTab === "recommend")
-                <label class="tabs__label" for="tab-recommend"></label>
-                <div class="tabs__content">
-                    <x-grid.item :items="$items" />
-                </div>
-            @endif
+    </nav>
 
-            {{-- マイリスト一覧 --}}
-            @if ($activeTab === "mylist")
-                <label class="tabs__label" for="tab-mylist"></label>
-                <div class="tabs__content">
-                    <x-grid.item :items="$myListItems" />
-                </div>
-            @endif
-        </div>
-    </section>
+    {{-- おすすめ一覧 --}}
+    @if ($activeTab === "recommend")
+        <section class="tabs__content">
+            <div class="tabs__content">
+                <x-grid.item :items="$items" />
+            </div>
+        </section>
+    @endif
+
+    {{-- マイリスト一覧 --}}
+    @if ($activeTab === "mylist")
+        <section class="tabs__content">
+            <div class="tabs__content">
+                <x-grid.item :items="$myListItems" />
+            </div>
+        </section>
+    @endif
 @endsection

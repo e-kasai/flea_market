@@ -8,7 +8,6 @@ class TransactionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // return true;
         // ログインかつプロフィール必須
         return auth()->check() && auth()->user()->profile()->exists();
     }

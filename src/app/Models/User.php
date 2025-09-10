@@ -40,7 +40,7 @@ class User extends Authenticatable
     // User(Parent)は複数のItem(Child)を持つ = hasMany
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->hasMany(Item::class, 'seller_id');
     }
 
     // User(Parent)は複数のComment(Child)を持つ = hasMany
@@ -52,7 +52,7 @@ class User extends Authenticatable
     // User(Parent)は複数のTransaction(Child)を持つ = hasMany
     public function transactions()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class, 'buyer_id');
     }
 
     //中間テーブルfavoritesのリレーション

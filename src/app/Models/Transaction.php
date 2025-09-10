@@ -12,6 +12,9 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
+        'item_id',
+        'buyer_id',
+        'purchase_price',
         'payment_method',
         'shipping_postal_code',
         'shipping_address',
@@ -23,9 +26,9 @@ class Transaction extends Model
     ];
 
     //取引は必ず１人のユーザー（購入者）に属する = belongsTo
-    public function user()
+    public function buyer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 
     //取引は必ず１つの商品に属する = belongsTo

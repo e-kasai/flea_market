@@ -15,7 +15,12 @@ class ProfileController extends Controller
         //User モデル経由で $profile を取得（ログイン中のユーザー１人分の情報）
         $user = Auth::user();
         $profile = Profile::firstOrNew(['user_id' => auth()->id()]);
-        return view('profile', compact('profile', 'user'));
+        // 出品商品
+        $items = $user->items()->latest()->get();
+        //購入商品
+        $transactions = $user->transactions()->with('item')->get();
+        $purchasedItems = $transactions->pluck('item')->filter();
+        return view('profile', compact('profile', 'user', 'items', 'purchasedItems'));
     }
 
     //プロフィール編集画面の表示
