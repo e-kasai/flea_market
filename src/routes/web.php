@@ -8,6 +8,8 @@ use App\Http\Controllers\ExhibitController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PurchaseController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 //商品一覧画面表示(マイリストを呼ぶメソッドはコントローラー内で条件分岐呼び出し)
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
@@ -81,3 +83,28 @@ Route::prefix('purchase')
         Route::get('/address/{item}', [PurchaseController::class, 'showShippingAddress'])->name('address.show');
         Route::patch('/address/{item}', [PurchaseController::class, 'updateShippingAddress'])->name('address.update');
     });
+
+
+// 未認証ユーザーに見せる認証案内ページ
+Route::get('/email/verify', function () {
+    return view('auth.verify_email');
+})->middleware('auth')->name('verification.notice');
+
+
+// メールのリンクを踏んだときの検証
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect()->route('items.index');
+})->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
+
+
+// 認証メールの再送
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', '認証メールを再送しました。');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+//一覧ページを「認証済みだけ」通す
+// Route::get('/', [ItemController::class, 'index'])
+//     ->name('items.index')
+//     ->middleware(['auth', 'verified']);

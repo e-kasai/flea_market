@@ -24,6 +24,7 @@ class RegisterController extends Controller
 
         auth()->login($user);
         $request->session()->regenerate();
-        return redirect()->route('profile.show');
+        // return redirect()->route('profile.show');
+        return redirect()->route('verification.notice');
     }
 }

@@ -1,0 +1,43 @@
+/* ボタン風リンク */
+.verify__link {
+    flex: 0 0 auto;
+    display: inline-block;
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.6rem, 4vw, 2rem);
+    font-size: clamp(1rem, 2vw, 1.6rem);
+    border: 2px solid #ff5555;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #ff5555;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+
+.verify__link:hover {
+    background: #ff5555;
+    color: #fff;
+    cursor: pointer;
+}
+
+.resend__link {
+    text-decoration: none;
+    color: #0073cc;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 400;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+@media (max-width: 600px) {
+    .verify__link {
+        width: 100%;
+        margin-top: 1rem;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}

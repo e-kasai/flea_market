@@ -15,7 +15,7 @@
         {{-- ボタン --}}
         <x-slot name="actions">
             <button class="btn" type="submit">ログインする</button>
-            <a class="link" href="{{ route("login") }}">会員登録はこちら</a>
+            <a class="link" href="{{ route("register.show") }}">会員登録はこちら</a>
         </x-slot>
         {{-- ここまでが$slotに入る --}}
     </x-form.card>

@@ -23,14 +23,8 @@ class ItemController extends Controller
             ->latest()
             ->get();
 
-        // 検索条件があれば絞り込み
-        // $keyword = $request->get('keyword');
-        // $items = Item::when($keyword, function ($query, $keyword) {
-        //     return $query->where('item_name', 'LIKE', "%{$keyword}%");
-        // })->get();
 
-
-        // マイリストはログイン状態の場合のみ表示
+        // ログイン済みのみマイリスト表示
         if ($activeTab === 'mylist' && auth()->check()) {
             $myListItems = auth()->user()->favoriteItems()
                 ->when($keyword, fn($query, $keyword) =>

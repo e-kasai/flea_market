@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Models;
-// あとでメール認証実装時に追加今は不要
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,8 +12,11 @@ use App\Models\Comment;
 use App\Models\Transaction;
 use App\Models\Item;
 
-class User extends Authenticatable
+
+
+class User extends Authenticatable implements MustVerifyEmail
 {
+
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
