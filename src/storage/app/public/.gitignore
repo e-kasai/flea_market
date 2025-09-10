@@ -1,4 +1,6 @@
 *
 !material_images/
 !items/
+!items/.gitkeep
+!material_images/.gitkeep
 !.gitignore
