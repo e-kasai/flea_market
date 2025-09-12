@@ -13,12 +13,10 @@ use App\Models\Transaction;
 use App\Models\Item;
 
 
-
 class User extends Authenticatable implements MustVerifyEmail
 {
 
     use HasApiTokens, HasFactory, Notifiable;
-
     protected $fillable = [
         'name',
         'email',
