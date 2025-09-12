@@ -8,6 +8,7 @@ use App\Http\Controllers\ExhibitController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -104,7 +105,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', '認証メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-//一覧ページを「認証済みだけ」通す
-// Route::get('/', [ItemController::class, 'index'])
-//     ->name('items.index')
-//     ->middleware(['auth', 'verified']);
+//stripe決済画面へ遷移
+Route::post('/checkout/{item}', [CheckoutController::class, 'redirectToCheckout'])
+    ->name('stripe.checkout.create')
+    ->middleware('auth');

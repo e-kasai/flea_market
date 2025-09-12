@@ -17,7 +17,8 @@
     @endphp
 
     <section class="item">
-        <form method="POST" action="{{ route("purchase.item", $item) }}" novalidate>
+        <form method="POST" action="{{ route("stripe.checkout.create", $item) }}" novalidate>
+            {{-- <form method="POST" action="{{ route("purchase.item", $item) }}" novalidate> --}}
             @csrf
             {{-- ここから画面左側の領域 --}}
             <div class="item-info">
