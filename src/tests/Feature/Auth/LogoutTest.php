@@ -11,7 +11,7 @@ class LogoutTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function testLogoutEnable()
+    public function test_logout_enable()
     {
         // ファクトリでユーザーを作ってログインする
         $user = User::factory()->create();
@@ -19,13 +19,13 @@ class LogoutTest extends TestCase
 
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
 
-        //ログアウトボタンを押したを再現
+        //ログアウトボタンを押す
         $response = $this->post(route('logout'));
 
-        // 期待1：未ログイン状態になっている
+        // 期待1：未ログイン状態になる
         $this->assertGuest();
 
         // 期待2：ログアウト後は商品ページ一覧にリダイレクトする
-        $response->assertRedirect('/');
+        $response->assertRedirect(route('items.index'));
     }
 }
