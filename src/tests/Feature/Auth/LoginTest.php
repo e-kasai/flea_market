@@ -19,7 +19,7 @@ class LoginTest extends TestCase
     public function test_login_fails_if_email_is_empty()
     {
         //メールアドレスを入れずにログイン
-        $response = $this->post('/login', [
+        $response = $this->post(route('login'), [
             'email' => '',
             'password' => 'password123',
         ]);
@@ -33,7 +33,7 @@ class LoginTest extends TestCase
     public function test_login_fails_if_password_is_empty()
     {
         //パスワードを入れずにログイン
-        $response = $this->post('/login', [
+        $response = $this->post(route('login'), [
             'email' => 'test@example.com',
             'password' => '',
         ]);
@@ -47,7 +47,7 @@ class LoginTest extends TestCase
 
     public function test_login_fails_if_email_is_not_registered()
     {
-        $response = $this->post('/login', [
+        $response = $this->post(route('login'), [
             // メールアドレスは未登録想定（RefreshDatabaseしてるのでそもそも登録済みアドレスがないため）
             'email' => 'no-such-user@example.com',
             'password' => 'password',
@@ -66,7 +66,7 @@ class LoginTest extends TestCase
             'password' => bcrypt('correct-password'),
         ]);
 
-        $response = $this->post('/login', [
+        $response = $this->post(route('login'), [
             'email' => 'test@example.com',
             'password' => 'wrong-password',
         ]);
@@ -85,7 +85,7 @@ class LoginTest extends TestCase
         ]);
 
         // 作成した正しい資格情報でログイン
-        $response = $this->post('/login', [
+        $response = $this->post(route('login'), [
             'email' => 'test@example.com',
             'password' => 'password123',
         ]);
