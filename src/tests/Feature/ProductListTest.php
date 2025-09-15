@@ -37,7 +37,7 @@ class ProductListTest extends TestCase
 
         // 期待3: 全商品の名称が画面に出ている
         foreach ($items as $item) {
-            $response->assertSee($item->item_name, false);
+            $response->assertSeeText($item->item_name);
         }
     }
 
@@ -57,7 +57,7 @@ class ProductListTest extends TestCase
         //期待1: 一覧ページが返る
         $response->assertOk();
         // 期待2: 売り切れ商品にSOLD表示がある
-        $response->assertSee('売り切れ商品');
+        $response->assertSeeText('売り切れ商品');
         $response->assertSeeText('SOLD');
     }
 
