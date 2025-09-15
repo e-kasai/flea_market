@@ -14,7 +14,7 @@ class ItemFactory extends Factory
     {
         return [
             'seller_id' => User::factory(),
-            'item_name' => $this->faker->word,
+            'item_name' => $this->faker->unique()->word,
             'price'     => $this->faker->numberBetween(500, 5000),
             'is_sold'   => false,
             'image_path' => 'noimage.png',
