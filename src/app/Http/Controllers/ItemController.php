@@ -55,11 +55,20 @@ class ItemController extends Controller
 
         $comments = $item->comments()->oldest()->get();
 
+        //ログインユーザーのいいね数のみDBに保存
         $favoritesCount = $item->favoritedByUsers()->count();
+        //ゲストのセッション配列に、この商品のIDが入ってるかをチェック
+        $guestFavorited = in_array($item->id, session('guest_favorites', []));
+
         $isFavorited = auth()->check()
             ? $item->favoritedByUsers()->where('user_id', auth()->id())->exists()
-            : false;
+            : $guestFavorited;
 
-        return view('detail', compact('item', 'favoritesCount', 'isFavorited', 'comments', 'currentUser'));
+        // 表示用のいいね数
+        //ログイン中: DB に保存された正しい数だけ表示
+        //ゲスト中: DBカウント + あればセッション分(+1)。
+        $displayFavoritesCount = $favoritesCount + (!auth()->check() && $guestFavorited ? 1 : 0);
+
+        return view('detail', compact('item', 'favoritesCount', 'isFavorited', 'comments', 'currentUser', 'displayFavoritesCount'));
     }
 }

@@ -51,7 +51,7 @@
                         </form>
                     @endif
                     {{-- いいね数 --}}
-                    <span class="count">{{ $favoritesCount }}</span>
+                    <span class="count">{{ $displayFavoritesCount }}</span>
                 </div>
                 <div class="comment">
                     <button type="submit" class="icon-btn" aria-pressed="false">

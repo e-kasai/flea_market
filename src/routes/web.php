@@ -52,17 +52,19 @@ Route::get('/item/{item}', [ItemController::class, 'showItemDetail'])
     ->name('details.show');
 
 
-//コメント、いいね機能
+//コメント機能
 Route::prefix('item')
     ->middleware('auth')
     ->group(function () {
-        //コメント
         Route::post('/{item}/comment', [CommentController::class, 'storeComment'])
             ->name('comments.store');
-        //いいね追加
+    });
+
+//いいね機能
+Route::prefix('item')
+    ->group(function () {
         Route::post('/{item}/favorite', [FavoriteController::class, 'setItemFavorite'])
             ->name('favorite.store');
-        //いいね解除
         Route::delete('/{item}/favorite', [FavoriteController::class, 'setItemUnfavorite'])
             ->name('favorite.destroy');
     });
