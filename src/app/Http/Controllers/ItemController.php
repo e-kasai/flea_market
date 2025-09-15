@@ -31,8 +31,7 @@ class ItemController extends Controller
             ->latest()
             ->get();
 
-
-        // ログインユーザーのみマイリスト表示
+        //ログインユーザーのみマイリスト表示
         if ($activeTab === 'mylist' && auth()->check()) {
             $myListItems = auth()->user()->favoriteItems()
                 ->when($keyword, fn($query, $keyword) =>
