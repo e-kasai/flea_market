@@ -16,15 +16,23 @@ class ItemController extends Controller
         $activeTab = $request->get('tab', 'recommend');
 
         // おすすめタブ
-        //自分が出品した商品を除外
+        //検索結果は自分が出品した商品は除外して表示
         $items = Item::query()
-            ->where('seller_id', '<>', $userId)
-            ->when($keyword, fn($query, $keyword) => $query->where('item_name', 'LIKE', "%{$keyword}%"))
+            ->when(
+                auth()->check(),
+                fn($query) =>
+                $query->where('seller_id', '<>', $userId)
+            )
+            ->when(
+                $keyword,
+                fn($query, $keyword) =>
+                $query->where('item_name', 'LIKE', "%{$keyword}%")
+            )
             ->latest()
             ->get();
 
 
-        // ログイン済みのみマイリスト表示
+        // ログインユーザーのみマイリスト表示
         if ($activeTab === 'mylist' && auth()->check()) {
             $myListItems = auth()->user()->favoriteItems()
                 ->when($keyword, fn($query, $keyword) =>
