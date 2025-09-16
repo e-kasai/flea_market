@@ -11,7 +11,6 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\StripeWebhookController;
 
 //商品一覧画面表示(マイリストを呼ぶメソッドはコントローラー内で条件分岐呼び出し)
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
