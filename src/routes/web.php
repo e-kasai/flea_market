@@ -11,6 +11,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use App\Http\Controllers\StripeWebhookController;
 
 //商品一覧画面表示(マイリストを呼ぶメソッドはコントローラー内で条件分岐呼び出し)
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
@@ -70,7 +71,9 @@ Route::prefix('item')
     });
 
 
-//購入機能
+Route::get('/purchase/complete', [CheckoutController::class, 'complete'])
+    ->name('purchase.complete');
+
 //購入画面表示
 Route::prefix('purchase')
     ->middleware('auth')

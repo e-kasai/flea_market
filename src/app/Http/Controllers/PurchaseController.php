@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ShippingAddressRequest;
 use App\Models\Item;
-use App\Models\Transaction;
 use App\Http\Requests\TransactionRequest;
-use Illuminate\Support\Facades\DB;
 
 
 class PurchaseController extends Controller
@@ -45,61 +43,28 @@ class PurchaseController extends Controller
         $user = auth()->user();
         $profile = $user->profile;
 
-
         // プロフィール未登録なら編集ページへ
         if (! $profile) {
             return redirect()
                 ->route('profile.edit')
                 ->with('message', '購入には住所登録が必要です。プロフィールを設定してください。');
         }
+
         // 自分の商品は買えない
         if ($item->seller_id === $user->id) {
             return back()->with('message', '自分の商品は購入できません。');
         }
+
         // 売れたものは買えない
         if ($item->is_sold ?? false) {
             return back()->with('message', 'この商品は売り切れです。');
         }
 
-        //配送先変更あればmerge
-        $originalAddress = [
-            'postal_code' => $profile?->postal_code,
-            'address'     => $profile?->address,
-            'building'    => $profile?->building,
-        ];
+        // DBは確定しない。住所ドラフトだけ保存（確定はcomplete側）
+        +session(["draft_address.{$item->id}" => $request->only(['postal_code', 'address', 'building'])]);
 
-        $draftAddress = session("draft_address.{$item->id}", []);
-        $draftAddress = array_intersect_key($draftAddress, $originalAddress);
-        $shipping = array_replace($originalAddress, $draftAddress);
-
-        //上記のifにあてはまらない場合のみ購入処理
-        DB::transaction(
-            function () use ($item, $user, $shipping, $request) {
-                // 同時購入を防止
-                $locked = Item::whereKey($item->id)->lockForUpdate()->first();
-
-                if ($locked->is_sold) {
-                    // 直前に売れた場合の二重購入防止
-                    throw new \RuntimeException('この商品はすでに売り切れです。');
-                }
-
-                Transaction::create([
-                    'item_id'               => $locked->id,
-                    'buyer_id'              => $user->id,
-                    'purchase_price'        => $locked->price,
-                    'payment_method'        => (int) $request->input('payment_method'),
-                    'shipping_postal_code'  => $shipping['postal_code'],
-                    'shipping_address'      => $shipping['address'],
-                    'shipping_building'     => $shipping['building'],
-                ]);
-                $locked->update(['is_sold' => true]);
-            }
-        );
-        // 使い終わったドラフトは掃除
-        session()->forget("draft_address.{$item->id}");
-
-        return redirect()->route('items.index')
-            ->with('message', '購入が完了しました。');
+        // Stripeへ（POSTのまま直呼びでOK）
+        return app(\App\Http\Controllers\CheckoutController::class)->redirectToCheckout($request, $item);
     }
 
     // 配送先変更画面表示
