@@ -48,10 +48,9 @@ class ExhibitController extends Controller
             $categoryIds = $request->input('category_ids', []);
             // 中間テーブルへ保存（古いのを削除 → 新しいのをまとめて追加）
             $item->categories()->sync($categoryIds);
-            // return $item;
         });
 
-        return redirect()->back()->with('message', '出品しました。');
-        // return redirect()->route('items.show',$item)->with('message', '出品しました。');
+        // return redirect()->back()->with('message', '出品しました。');
+        return redirect()->route('items.index')->with('message', '出品しました。');
     }
 }
