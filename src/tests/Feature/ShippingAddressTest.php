@@ -5,19 +5,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ShippingAddressTest extends TestCase
 {
     use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp(); // 親の準備処理
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
-
 
     public function test_updated_shipping_address_reflects_on_purchase_page()
     {
@@ -31,7 +28,6 @@ class ShippingAddressTest extends TestCase
         $item = Item::factory()->create();
 
         $this->actingAs($user);
-
         $this->patch(
             route('address.update', $item),
             [
@@ -53,7 +49,6 @@ class ShippingAddressTest extends TestCase
 
     public function test_shipping_address_is_saved_with_transaction_on_purchase()
     {
-
         $user = User::factory()->create(['email_verified_at' => now()]);
         $user->profile()->create([
             'postal_code' => '100-0000',
@@ -68,7 +63,6 @@ class ShippingAddressTest extends TestCase
         ]);
 
         $this->actingAs($user);
-
         $this->patch(
             route('address.update', $item),
             [
@@ -78,7 +72,7 @@ class ShippingAddressTest extends TestCase
             ]
         )->assertStatus(302);
 
-        // コンビニ払いでテスト → redirectToCheckout() 内で即 Transaction 作成仕様のため
+        // コンビニ払いでテスト → コンビニは購入ボタン押下 = 即Transaction作成仕様の為
         $this->post(route('purchase.item', $item), [
             'payment_method' => 1,
             'postal_code'    => '100-0001',
