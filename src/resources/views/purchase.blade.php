@@ -81,7 +81,6 @@
             </p>
 
             {{-- 購入ボタン --}}
-
             <button type="submit" {{ $canPurchase ? "" : "disabled" }}>購入する</button>
         </form>
     </section>
@@ -91,7 +90,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const select = document.getElementById('payment_method');
-            const preview = document.getElementById('payment_preview');
+            const preview = document.querySelector('[id="payment_preview"]');
 
             if (!select || !preview) return; // 念のため
 
