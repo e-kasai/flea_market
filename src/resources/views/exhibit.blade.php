@@ -23,7 +23,7 @@
                 <input class="avatar-path__input" type="file" id="image_path" name="image_path" />
             </div>
             @error("image_path")
-                <div class="form-group__error">
+                <div class="form-error">
                     {{ $message }}
                 </div>
             @enderror
@@ -44,13 +44,13 @@
                             value="{{ $category->id }}"
                             {{ in_array($category->id, old("category_ids", [])) ? "checked" : "" }}
                         />
-                        <span>{{ $category->category_name }}</span>
+                        <span class="chip tag--category-exhibit">{{ $category->category_name }}</span>
                     </label>
                 @endforeach
             </div>
 
             @error("category_ids")
-                <div class="form-group__error">{{ $message }}</div>
+                <div class="form-error">{{ $message }}</div>
             @enderror
         </div>
 
@@ -67,7 +67,7 @@
             </select>
 
             @error("condition")
-                <div class="form-group__error">{{ $message }}</div>
+                <div class="form-error">{{ $message }}</div>
             @enderror
         </div>
         <div class="subtitle">
@@ -84,7 +84,7 @@
         </x-form.input>
         {{-- 販売価格 --}}
         <div class="price-input--with-symbol">
-        <x-form.input type="text" name="price" label="販売価格" step="1" required />
+            <x-form.input type="text" name="price" label="販売価格" step="1" required />
         </div>
         {{-- ボタン --}}
         <x-slot name="actions">

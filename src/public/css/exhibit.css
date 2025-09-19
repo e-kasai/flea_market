@@ -2,8 +2,8 @@
     font-weight: 700;
     color: #5f5f5f;
     font-size: clamp(1rem, 2vw, 3rem);
-    margin-bottom: 0; /* 線の下余白 */
-    padding-bottom: 0.2rem; /* 必要ならちょっと詰める */
+    margin-bottom: 0;
+    padding-bottom: 0.2rem;
 }
 
 .subtitle {
@@ -71,18 +71,11 @@
     display: none;
 }
 
-/* タグの見た目 */
-
-.category-tag span {
-    display: inline-block;
-    padding: 0.6rem 2rem;
+/* カテゴリタグ */
+.tag--category-exhibit {
     border: 2px solid #ff5655;
-    border-radius: 16px;
     color: #ff5655;
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .category-tag span:hover {

@@ -57,6 +57,7 @@
         />
     @endif
     @error($name)
-        <span id="{{ $errorId }}" class="form-group__error">{{ $message }}</span>
+        {{-- <span id="{{ $errorId }}" class="form-group__error">{{ $message }}</span> --}}
+        <span id="{{ $errorId }}" class="form-error">{{ $message }}</span>
     @enderror
 </label>

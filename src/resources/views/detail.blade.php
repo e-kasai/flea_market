@@ -25,7 +25,7 @@
             <p class="product__brand">{{ $item->brand_name }}</p>
             <p class="product__price">
                 ¥{{ number_format($item->price) }}
-                <small>（税込）</small>
+                <span class="tax-included">(税込)</span>
             </p>
             <div class="icons">
                 <div class="like">
@@ -65,8 +65,8 @@
             <a class="link--purchase" href="{{ route("purchase.show", $item) }}">購入手続きへ</a>
 
             <section class="product__section">
-                <h2 class="product__heading">商品の説明</h2>
-                <p>{{ $item->description }}</p>
+                <h2 class="product__heading">商品説明</h2>
+                <p class="product__description">{{ $item->description }}</p>
             </section>
 
             <section class="product__section">
@@ -74,10 +74,11 @@
                 {{-- カテゴリ --}}
                 <ul class="product__details">
                     <li>
-                        <span class="key">カテゴリ</span>
+                        <span class="key">カテゴリー</span>
                         <span class="value category">
                             @foreach ($item->categories as $categoryName)
-                                <span class="chip">{{ $categoryName->category_name }}</span>
+                                {{-- <span class="chip">{{ $categoryName->category_name }}</span> --}}
+                                <span class="chip tag--category-detail">{{ $categoryName->category_name }}</span>
                             @endforeach
                         </span>
                     </li>
@@ -91,7 +92,7 @@
                 <div class="comment-list">
                     {{-- コメント数 --}}
                     @if (isset($comments) && $comments->count())
-                        <h2 class="product__heading">コメント({{ $comments->count() }})</h2>
+                        <h2 class="comment__heading">コメント({{ $comments->count() }})</h2>
                         @foreach ($comments as $comment)
                             {{-- 投稿者情報 --}}
                             <div class="comment__users">
@@ -101,20 +102,20 @@
                                 @endphp
 
                                 <img class="comment__users-avatar" src="{{ $avatarPath }}" alt="プロフィール画像" />
-                                <p class="comment__user-name">{{ $comment->user->name }}</p>
+                                <p class="comment__users-name">{{ $comment->user->name }}</p>
                             </div>
                             {{-- 本文 --}}
                             <p class="comment__body">{{ $comment->body }}</p>
                         @endforeach
                     @else
-                        <p class="product__heading">コメント(0)</p>
+                        <p class="comment__heading">コメント(0)</p>
                     @endif
                 </div>
                 {{-- コメントフォーム --}}
                 <p class="comment-form__title">商品へのコメント</p>
                 <form method="POST" action="{{ route("comments.store", $item) }}">
                     @csrf
-                    <textarea name="body" rows="4" cols="30">{{ old("body") }}</textarea>
+                    <textarea class="comment-textarea" name="body" rows="4" cols="30">{{ old("body") }}</textarea>
                     @error("body")
                         <p class="form-error">{{ $message }}</p>
                     @enderror

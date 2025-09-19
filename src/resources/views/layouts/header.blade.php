@@ -10,7 +10,7 @@
                 type="text"
                 name="keyword"
                 value="{{ request("keyword") }}"
-                placeholder="何をお探しですか？"
+                placeholder="なにをお探しですか？"
             />
         </form>
         <nav class="header__nav">
