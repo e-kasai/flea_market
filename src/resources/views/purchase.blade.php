@@ -5,7 +5,6 @@
 @endpush
 
 @section("content")
-    {{-- あとでアクセサにいれるか検討 --}}
     @php
         if (Str::startsWith($item->image_path, "http")) {
             // S3など外部URLの場合
@@ -16,72 +15,95 @@
         }
     @endphp
 
-    <section class="item">
-        <form method="POST" action="{{ route("purchase.item", $item) }}" novalidate>
+    <section class="purchase">
+        <form class="purchase__form" method="POST" action="{{ route("purchase.item", $item) }}" novalidate>
             @csrf
-            {{-- ここから画面左側の領域 --}}
-            <div class="item-info">
-                {{-- 商品画像 --}}
-                <div class="product__media">
-                    <img src="{{ $img }}" alt="{{ $item->item_name }}" class="product__img" />
+
+            <div class="purchase__grid">
+                {{-- 左側 --}}
+                <div class="purchase__left">
+                    <div class="purchase__item-info">
+                        {{-- 商品画像 --}}
+                        <img class="product__img" src="{{ $img }}" alt="{{ $item->item_name }}" />
+                        {{-- 商品名 --}}
+                        <div class="purchase__item-text">
+                            <h1 class="purchase__item-name">{{ $item->item_name }}</h1>
+                            {{-- 価格 --}}
+                            <p class="purchase__price-detail">
+                                <span class="yen">¥</span>
+                                {{ number_format($item->price) }}
+                            </p>
+                        </div>
+                    </div>
+                    {{-- 支払い方法セレクトボックス --}}
+                    <div class="purchase__item-info">
+                        <div class="purchase__payment">
+                            <label for="payment_method"><span class="purchase__payment-title">支払い方法</span></label>
+                            <br />
+
+                            <select class="purchase__payment-select" name="payment_method" id="payment_method" required>
+                                <option value="" disabled hidden {{ old("payment_method") ? "" : "selected" }}>
+                                    選択してください
+                                </option>
+                                <option value="1" {{ old("payment_method") === "1" ? "selected" : "" }}>コンビニ払い</option>
+                                <option value="2" {{ old("payment_method") === "2" ? "selected" : "" }}>カード支払い</option>
+                            </select>
+                            @error("payment_method")
+                                <p class="form-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="purchase__address">
+                        <div class="purchase__address-header">
+                            <h2 class="purchase__address-title">配送先</h2>
+                            <a class="link" href="{{ route("address.show", $item) }}">変更する</a>
+                        </div>
+                        <p class="purchase__address-line">
+                            <span class="postal">〒</span>
+                            {{ $shipping["postal_code"] ?? "" }}
+                        </p>
+                        <p class="purchase__address-line">{{ $shipping["address"] ?? "" }}</p>
+                        <p class="purchase__address-line">{{ $shipping["building"] ?? "" }}</p>
+
+                        @if (! $canPurchase)
+                            <p class="alert">
+                                住所が未登録です。
+                                <a href="{{ route("profile.edit") }}">プロフィール編集</a>
+                                から登録してください。
+                            </p>
+                        @endif
+                    </div>
                 </div>
-                {{-- 商品名 --}}
-                <h1>{{ $item->item_name }}</h1>
+
+                {{-- 右側 --}}
+                <div class="purchase__right">
+                    <div class="purchase__summary">
+                        <div class="purchase__summary-row">
+                            <p class="purchase__summary-title">商品代金</p>
+                            <p class="purchase__summary-price">
+                                <span class="yen">¥</span>
+                                {{ number_format($item->price) }}
+                            </p>
+                        </div>
+                        @php
+                            $paymentLabels = [
+                                0 => "選択してください",
+                                1 => "コンビニ払い",
+                                2 => "カード支払い",
+                            ];
+                        @endphp
+
+                        <div class="purchase__summary-row">
+                            <p class="purchase__payment-header">支払い方法</p>
+                            <p class="purchase__payment-preview" id="payment_preview">
+                                {{ old("payment_method") ? $paymentLabels[(int) old("payment_method")] ?? "未選択" : "未選択" }}
+                            </p>
+                        </div>
+                    </div>
+                    <button class="purchase__button" type="submit" {{ $canPurchase ? "" : "disabled" }}>購入する</button>
+                </div>
             </div>
-            {{-- 価格 --}}
-            <p>
-                ¥{{ number_format($item->price) }}
-                <small>（税込）</small>
-            </p>
-            {{-- 支払い方法セレクトボックス --}}
-            <div>
-                <label for="payment_method"><span>支払い方法</span></label>
-                <br />
-
-                <select name="payment_method" id="payment_method" required>
-                    <option value="" disabled hidden {{ old("payment_method") ? "" : "selected" }}>選択してください</option>
-                    <option value="1" {{ old("payment_method") === "1" ? "selected" : "" }}>コンビニ払い</option>
-                    <option value="2" {{ old("payment_method") === "2" ? "selected" : "" }}>カード支払い</option>
-                </select>
-                @error("payment_method")
-                    <div>{{ $message }}</div>
-                @enderror
-            </div>
-
-            <p>配送先</p>
-            <a href="{{ route("address.show", $item) }}">変更する</a>
-            {{-- 配送先の表示（プロフィールで登録した住所） --}}
-            <p>{{ $shipping["postal_code"] ?? "" }}</p>
-            <p>{{ $shipping["address"] ?? "" }}</p>
-            <p>{{ $shipping["building"] ?? "" }}</p>
-
-            @if (! $canPurchase)
-                <p class="alert">
-                    住所が未登録です。
-                    <a href="{{ route("profile.edit") }}">プロフィール編集</a>
-                    から登録してください。
-                </p>
-            @endif
-
-            {{-- ここから画面右側の領域 --}}
-            {{-- 商品代金 = 価格 --}}
-            <p>¥{{ number_format($item->price) }}</p>
-            {{-- 支払い方法のプレビュー --}}
-            @php
-                // ラベル表
-                $paymentLabels = [
-                    0 => "選択してください",
-                    1 => "コンビニ払い",
-                    2 => "カード支払い",
-                ];
-            @endphp
-
-            <p id="payment_preview">
-                {{ old("payment_method") ? $paymentLabels[(int) old("payment_method")] ?? "未選択" : "未選択" }}
-            </p>
-
-            {{-- 購入ボタン --}}
-            <button type="submit" {{ $canPurchase ? "" : "disabled" }}>購入する</button>
         </form>
     </section>
 @endsection
@@ -92,7 +114,7 @@
             const select = document.getElementById('payment_method');
             const preview = document.querySelector('[id="payment_preview"]');
 
-            if (!select || !preview) return; // 念のため
+            if (!select || !preview) return;
 
             // value→ラベルの対応（Blade側と一致）
             const labels = {

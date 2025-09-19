@@ -9,7 +9,7 @@ CSS VARIABLES
 ---------------------------------*/
 :root {
     /* フォント(全て）*/
-    --ff: inter;
+    --ff: "Inter", sans-serif;
 }
 
 /*---------------------------------
@@ -24,6 +24,7 @@ html {
 /* 全てのフォントをinterに設定 */
 body {
     font-family: var(--ff);
+    font-variant-numeric: normal;
     margin: 0;
     padding: 0;
 }
@@ -193,5 +194,16 @@ HEADER
         margin: 0 auto;
         font-size: clamp(1.5rem, 4vw, 1.9rem);
         padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1.2rem, 3vw, 2rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .nav__link,
+    .logout-form {
+        font-size: clamp(0.8rem, 2vw, 1.5rem);
+    }
+
+    .nav__link--sell {
+        padding: 0 20px;
     }
 }

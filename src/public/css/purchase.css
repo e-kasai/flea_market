@@ -1,0 +1,193 @@
+/*---------------------------------
+商品購入画面
+---------------------------------*/
+.purchase__form {
+    margin-top: clamp(2rem, 6vw, 60px);
+}
+
+.purchase__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: clamp(2rem, 8vw, 10rem);
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: clamp(1rem, 4vw, 2rem);
+}
+
+/* 左側 */
+
+/* 画像 */
+.product__img {
+    width: clamp(120px, 15vw, 200px);
+    height: clamp(120px, 15vw, 200px);
+    object-fit: cover;
+    display: block;
+    margin: 0 clamp(1rem, 5vw, 50px) clamp(1rem, 5vw, 40px) 0;
+}
+
+.purchase__item-info {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(0.5rem, 2vw, 1rem);
+    border-bottom: 1px solid #000000;
+}
+
+.purchase__item-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: clamp(0.1rem, 1vw, 0.3rem);
+}
+
+.purchase__item-name {
+    font-size: clamp(1.5rem, 3vw, 30px);
+    font-weight: 700;
+    margin: 0;
+}
+
+.purchase__price-detail {
+    font-size: clamp(1.5rem, 3vw, 30px);
+    font-weight: 400;
+    margin: 0;
+}
+
+.purchase__address {
+    border-bottom: 1px solid #000000;
+}
+
+.purchase__payment {
+    margin: clamp(1rem, 4vw, 20px) 0 clamp(2rem, 6vw, 40px) clamp(1rem, 6vw, 30px);
+}
+
+.purchase__payment-title,
+.purchase__address-title {
+    font-size: clamp(1rem, 2vw, 18px);
+    font-weight: 700;
+}
+
+.purchase__payment-select {
+    margin: clamp(1rem, 5vw, 30px) 0 clamp(1rem, 5vw, 20px) clamp(2rem, 6vw, 60px);
+    font-weight: 700;
+    font-size: clamp(0.9rem, 2vw, 16px);
+    padding: clamp(0.2rem, 1vw, 5px) clamp(2rem, 8vw, 80px) clamp(0.2rem, 1vw, 5px) 0;
+    /* min-width: 200px;
+    display: block; */
+}
+
+.purchase__address-header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: clamp(0.5rem, 2vw, 10px) 0 clamp(0.5rem, 2vw, 10px) clamp(1rem, 6vw, 30px);
+    /* justify-content: flex-start; */
+    /* gap: clamp(2rem, 60vw, 60rem); */
+}
+
+.purchase__address-line {
+    font-size: clamp(1rem, 2vw, 18px);
+    font-weight: 600;
+    margin: clamp(0.2rem, 1vw, 3px) 0 0 clamp(2rem, 8vw, 90px);
+}
+
+.purchase__address-line:nth-of-type(3) {
+    margin-bottom: clamp(1rem, 6vw, 40px);
+}
+
+.link {
+    display: block;
+    text-decoration: none;
+    color: #0073cc;
+    font-size: clamp(1rem, 2vw, 2rem);
+    font-weight: 400;
+    text-align: center;
+    margin-top: clamp(1rem, 4vw, 2rem);
+}
+
+/* 右側 */
+.purchase__right {
+    padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+.purchase__summary-title,
+.purchase__payment-header {
+    font-weight: 400;
+    font-size: clamp(1rem, 2vw, 20px);
+}
+
+.purchase__summary-price,
+.purchase__payment-preview {
+    font-size: clamp(1rem, 2vw, 2rem);
+    font-weight: 400;
+}
+
+.purchase__summary {
+    border: 1px solid #000000;
+    overflow: hidden;
+}
+
+.purchase__summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: clamp(0.5rem, 2vw, 10px) clamp(1rem, 3vw, 4rem);
+    border-top: 1px solid #000000;
+}
+
+.purchase__summary-row:first-child {
+    border-top: none;
+}
+
+.purchase__summary-label {
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    color: #333;
+}
+
+.purchase__summary-value {
+    font-weight: bold;
+    color: #000;
+}
+
+.purchase__button {
+    padding: clamp(0.5rem, 2vw, 1.2rem) clamp(0.8rem, 3vw, 1.2rem);
+    margin: clamp(2rem, 6vw, 50px) 0 clamp(1rem, 4vw, 20px) 0;
+    max-width: 570px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background: #ff5555;
+    color: #ffffff;
+    font-size: clamp(1rem, 2vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition:
+        transform 0.02s ease,
+        background-color 0.15s ease;
+}
+
+.form-error {
+    margin-left: clamp(2rem, 6vw, 6rem);
+}
+
+@media (max-width: 768px) {
+    .purchase__grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .purchase__right {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .purchase__summary-row {
+        padding: 4px 80px;
+        gap: 20px;
+    }
+    .purchase__payment-select {
+        width: 100%;
+        padding: 5px 1rem;
+        box-sizing: border-box;
+    }
+}
