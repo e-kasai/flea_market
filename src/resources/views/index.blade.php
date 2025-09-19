@@ -1,7 +1,6 @@
 @extends("layouts.app")
 
 @push("styles")
-    {{-- 後で設定 --}}
     <link rel="stylesheet" href="{{ asset("css/grid.css") }}" />
     <link rel="stylesheet" href="{{ asset("css/tab.css") }}" />
 @endpush

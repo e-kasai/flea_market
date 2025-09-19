@@ -55,10 +55,21 @@
 .item-card__sold {
     display: inline-block;
     margin-left: clamp(0.8rem, 1vw, 1.2rem);
-    padding: clamp(0.2rem, 1vw, 0.4rem) clamp(1rem, 3vw, 2rem);
-    font-size: clamp(0.7rem, 2vw, 4rem);
+    padding: clamp(0.1rem, 0.5vw, 0.2rem) clamp(0.5rem, 1.5vw, 1rem);
+    font-size: clamp(0.6rem, 1.5vw, 1.2rem);
     font-weight: bold;
     color: #fff;
     background-color: #d9534f;
-    border-radius: 5px;
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .item-card__name {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-card__sold {
+        margin: 0;
+    }
 }
