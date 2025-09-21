@@ -9,9 +9,16 @@
     <x-form.card title="プロフィール設定" action="{{ route('profile.update') }}" method="PATCH" enctype="multipart/form-data">
         {{-- プロフィール画像 --}}
         <div class="avatar-path__group">
-            @if ($profile->avatar_path)
-                <img class="avatar" src="{{ asset("storage/" . $profile->avatar_path) }}" alt="プロフィール画像" />
-            @endif
+            <img
+                id="avatar-preview"
+                class="avatar"
+                src="{{
+                    $profile->avatar_path
+                        ? asset("storage/" . $profile->avatar_path)
+                        : asset("img/noimage.png")
+                }}"
+                alt="プロフィール画像プレビュー"
+            />
 
             {{-- 画像選択リンク --}}
             <div class="avatar-path">
@@ -21,7 +28,8 @@
                 <input class="avatar-path__input" type="file" id="avatar_path" name="avatar_path" />
                 <!-- エラー表示用のインジケーターも追加 -->
                 @error("avatar_path")
-                    <div class="profile-form__error">
+                    {{-- <div class="profile-form__error"> --}}
+                    <div class="form-error">
                         {{ $message }}
                     </div>
                 @enderror
@@ -47,3 +55,13 @@
         </x-slot>
     </x-form.card>
 @endsection
+
+@push("scripts")
+    <script>
+        document.getElementById('avatar_path').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('avatar-preview').src = URL.createObjectURL(file);
+        });
+    </script>
+@endpush

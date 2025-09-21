@@ -10,19 +10,18 @@
 }
 
 /* プロフィール画像 */
+
 .avatar {
     inline-size: clamp(64px, 12vw, 160px); /* width */
     block-size: clamp(64px, 12vw, 160px); /* height */
     border-radius: 50%;
     object-fit: cover;
-    aspect-ratio: 1 / 1; /* 正方形維持 */
+    aspect-ratio: 1 / 1;
     border: 2px solid #ccc;
     display: block;
-    margin-left: clamp(2rem, 10vw, 15rem);
 }
 
 /* プロフィール画像選択 */
-/* inputを隠す */
 .avatar-path__input {
     appearance: none;
     visibility: hidden;
@@ -35,7 +34,6 @@
     line-height: inherit;
 }
 
-/* 自作ボタン風 */
 .avatar-path__label {
     display: inline-block;
     padding: clamp(0.6rem, 2vw, 1rem) clamp(1.2rem, 4vw, 2rem);

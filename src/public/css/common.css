@@ -195,9 +195,7 @@ HEADER
         font-size: clamp(1.5rem, 4vw, 1.9rem);
         padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1.2rem, 3vw, 2rem);
     }
-}
 
-@media (max-width: 768px) {
     .nav__link,
     .logout-form {
         font-size: clamp(0.8rem, 2vw, 1.5rem);

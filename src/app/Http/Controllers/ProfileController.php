@@ -36,7 +36,6 @@ class ProfileController extends Controller
     public function updateProfile(ProfileRequest $request)
     {
         //ユーザー名更新(usersテーブルのnameカラム)
-        //transactionでプロフィールデータが１部だけ変更されてしまうのを防ぐ(All or nothing)
 
         DB::transaction(function () use ($request) {
             $validated = $request->validated();
