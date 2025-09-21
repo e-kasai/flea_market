@@ -12,6 +12,13 @@ class ExhibitionRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $normalized = mb_convert_kana($this->price, 'n', 'UTF-8');
+        $cleanPrice = preg_replace('/[^0-9]/', '', $normalized);
+        $this->merge(['price' => $cleanPrice]);
+    }
+
     public function rules(): array
     {
         return [
@@ -19,7 +26,7 @@ class ExhibitionRequest extends FormRequest
             'brand_name' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
             // validationは画像パスではなく実際の画像ファイルが対象
-            'image_path' => ['required', 'image', 'max:2048', 'mimes:jpg,jpeg,png'],
+            'image_path' => ['required', 'image', 'max:5120', 'mimes:jpg,jpeg,png'],
             //複数のカテゴリを扱いやすくするためarrayで形式を固定
             'category_ids'   => ['required', 'array', 'min:1'],
             //各要素に対してのルール（整数、重複禁止、存在カテゴリ）
@@ -46,10 +53,10 @@ class ExhibitionRequest extends FormRequest
             'description.string'   => '商品説明は文字列で入力してください。',
             'description.max'      => '商品説明は255文字以下で入力してください。',
 
-            // image_path（※ max:2048 は約2MB）
+            // image_path
             'image_path.required' => '商品画像を選択してください。',
             'image_path.image'    => '画像ファイルを選択してください。',
-            'image_path.max'      => '画像サイズは2MB以下にしてください。',
+            'image_path.max'      => '画像サイズは5MB以下にしてください。',
             'image_path.mimes'    => '画像の拡張子は jpg / jpeg / png のみ許可されています。',
 
             // category_ids

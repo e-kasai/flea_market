@@ -15,7 +15,7 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:20'],
-            'avatar_path' => ['nullable', 'image', 'max:2048', 'mimes:jpg,jpeg,png'],
+            'avatar_path' => ['nullable', 'image', 'max:5120', 'mimes:jpg,jpeg,png'],
             'postal_code' => ['required', 'regex:/^\d{3}-\d{4}$/'],
             'address' => ['required', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
@@ -38,7 +38,7 @@ class ProfileRequest extends FormRequest
             'name.string' => 'お名前を文字列で入力してください',
             'name.max' => 'お名前は20文字以下で入力してください',
             'avatar_path.image' => '画像形式でアップロードしてください',
-            'avatar_path.max' => '画像サイズは2MB以下のみ対応です',
+            'avatar_path.max' => '画像サイズは5MB以下のみ対応です',
             'avatar_path.mimes' => 'プロフィール画像はjpg,jpeg,pngのみ対応です',
             'postal_code.required' => '郵便番号を入力してください',
             'postal_code.regex' => '郵便番号は数字3桁-数字4桁で入力してください',
