@@ -61,10 +61,10 @@
                         </div>
                         <p class="purchase__address-line">
                             <span class="postal">〒</span>
-                            {{ $shipping["postal_code"] ?? "" }}
+                            {{ $shippingAddress["postal_code"] ?? "" }}
                         </p>
-                        <p class="purchase__address-line">{{ $shipping["address"] ?? "" }}</p>
-                        <p class="purchase__address-line">{{ $shipping["building"] ?? "" }}</p>
+                        <p class="purchase__address-line">{{ $shippingAddress["address"] ?? "" }}</p>
+                        <p class="purchase__address-line">{{ $shippingAddress["building"] ?? "" }}</p>
 
                         @if (! $canPurchase)
                             <p class="alert">

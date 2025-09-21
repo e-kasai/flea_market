@@ -26,7 +26,7 @@ Route::middleware('guest')->group(function () {
 
 //プロフィール関連
 Route::prefix('mypage')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         //プロフィール画面表示(出品、購入商品一覧を呼ぶメソッドはコントローラー内で条件分岐呼び出し)
         Route::get('/', [ProfileController::class, 'showProfilePage'])->name('profile.show');
@@ -38,7 +38,7 @@ Route::prefix('mypage')
 
 //出品
 Route::prefix('sell')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         //出品画面表示
         Route::get('/', [ExhibitController::class, 'showExhibitForm'])->name('exhibit.show');
@@ -54,7 +54,7 @@ Route::get('/item/{item}', [ItemController::class, 'showItemDetail'])
 
 //コメント機能
 Route::prefix('item')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::post('/{item}/comment', [CommentController::class, 'storeComment'])
             ->name('comments.store');
@@ -70,12 +70,19 @@ Route::prefix('item')
     });
 
 
-Route::get('/purchase/complete', [CheckoutController::class, 'complete'])
+//stripe決済画面へ遷移
+Route::post('/checkout/{item}', [CheckoutController::class, 'startPayment'])
+    ->name('stripe.checkout.create')
+    ->middleware(['auth', 'verified']);
+
+//stripe決済処理確定
+Route::get('/purchase/complete', [CheckoutController::class, 'finalizeTransaction'])
+    ->middleware(['auth', 'verified'])
     ->name('purchase.complete');
 
 //購入画面表示
 Route::prefix('purchase')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('/{item}', [PurchaseController::class, 'showPurchasePage'])->name('purchase.show');
         Route::post('/{item}', [PurchaseController::class, 'purchaseItem'])->name('purchase.item');
@@ -83,7 +90,7 @@ Route::prefix('purchase')
 
 //配送先変更
 Route::prefix('purchase')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('/address/{item}', [PurchaseController::class, 'showShippingAddress'])->name('address.show');
         Route::patch('/address/{item}', [PurchaseController::class, 'updateShippingAddress'])->name('address.update');
@@ -96,7 +103,7 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 
-// メールのリンクを踏んだときの検証
+// メール認証リンクアクセス時
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
     return redirect()->route('items.index');
@@ -108,8 +115,3 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', '認証メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-//stripe決済画面へ遷移
-Route::post('/checkout/{item}', [CheckoutController::class, 'redirectToCheckout'])
-    ->name('stripe.checkout.create')
-    ->middleware('auth');
