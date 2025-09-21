@@ -14,7 +14,7 @@
         @include("layouts.header")
         <main>
             @if (session("message"))
-                <div class="session-message">
+                <div class="session-message" role="status" aria-live="polite">
                     {{ session("message") }}
                 </div>
             @endif

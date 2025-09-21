@@ -133,6 +133,8 @@
     font-weight: 400;
     font-size: clamp(1.4rem, 1vw, 2rem);
     color: #000000;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 /* カテゴリと状態 */
