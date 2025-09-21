@@ -11,13 +11,19 @@
             type="text"
             name="postal_code"
             label="郵便番号"
-            value="{{ old('postal_code', $form['postal_code']) }}"
+            value="{{ old('postal_code', $shippingAddress['postal_code']) }}"
             required
         />
         {{-- 住所 --}}
-        <x-form.input type="text" name="address" label="住所" value="{{ old('address', $form['address']) }}" required />
+        <x-form.input
+            type="text"
+            name="address"
+            label="住所"
+            value="{{ old('address', $shippingAddress['address']) }}"
+            required
+        />
         {{-- 建物名 --}}
-        <x-form.input type="text" name="building" label="建物名" value="{{ old('building', $form['building']) }}" />
+        <x-form.input type="text" name="building" label="建物名" value="{{ old('building', $shippingAddress['building']) }}" />
         <x-slot name="actions">
             <button class="btn" type="submit">更新する</button>
         </x-slot>

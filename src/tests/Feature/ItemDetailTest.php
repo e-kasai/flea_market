@@ -50,7 +50,7 @@ class ItemDetailTest extends TestCase
         //number_formatがあるので￥をいれてテスト
         $response->assertSeeText('¥10,000');
         //デザイン上記載されてるため念のため税込もテスト
-        $response->assertSeeText('（税込）');
+        $response->assertSeeText('(税込)');
         $response->assertSeeText('動作確認済み');
     }
 
