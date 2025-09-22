@@ -62,7 +62,6 @@ class Item extends Model
     }
 
     //アクセサ
-    // conditionを文字列に変換
     public function getConditionLabelAttribute()
     {
         return match ($this->condition) {
@@ -73,11 +72,13 @@ class Item extends Model
         };
     }
 
-    //画像パスがS3か相対パスか判定する
     public function getImageUrlAttribute(): string
     {
-        return Str::startsWith($this->image_path, ['http://', 'https://']) //httpなどから始まる(条件)
-            ? $this->image_path                     // S3などの完成したURLならそのまま返す(true)
-            : asset('storage/' . $this->image_path); // 相対パスなら公開URLに変換(false)
+        if (empty($this->image_path)) {
+            return asset('img/noimage.png');
+        }
+        return Str::startsWith($this->image_path, ['http://', 'https://'])
+            ? $this->image_path
+            : asset('storage/' . $this->image_path);
     }
 }

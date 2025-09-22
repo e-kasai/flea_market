@@ -5,7 +5,7 @@
 <section class="item-grid">
     @foreach ($items as $item)
         <div class="item-card">
-            <a class="link-details" href="{{ route("details.show", $item) }}">
+            <a class="item-card__link" href="{{ route("details.show", $item) }}">
                 <img src="{{ $item->image_url }}" alt="{{ $item->item_name }}" class="item-card__img" />
                 <p class="item-card__name">
                     {{ $item->item_name }}

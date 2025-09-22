@@ -5,42 +5,26 @@
 @endpush
 
 @section("content")
-    @php
-        if (Str::startsWith($item->image_path, "http")) {
-            // S3など外部URLの場合
-            $img = $item->image_path;
-        } else {
-            // ローカルストレージの場合
-            $img = asset("storage/" . $item->image_path);
-        }
-    @endphp
-
     <section class="purchase">
         <form class="purchase__form" method="POST" action="{{ route("purchase.item", $item) }}" novalidate>
             @csrf
-
             <div class="purchase__grid">
                 {{-- 左側 --}}
                 <div class="purchase__left">
                     <div class="purchase__item-info">
-                        {{-- 商品画像 --}}
-                        <img class="product__img" src="{{ $img }}" alt="{{ $item->item_name }}" />
-                        {{-- 商品名 --}}
+                        <img class="product__img" src="{{ $item->image_url }}" alt="{{ $item->item_name }}" />
                         <div class="purchase__item-text">
                             <h1 class="purchase__item-name">{{ $item->item_name }}</h1>
-                            {{-- 価格 --}}
                             <p class="purchase__price-detail">
                                 <span class="yen">¥</span>
                                 {{ number_format($item->price) }}
                             </p>
                         </div>
                     </div>
-                    {{-- 支払い方法セレクトボックス --}}
                     <div class="purchase__item-info">
                         <div class="purchase__payment">
                             <label for="payment_method"><span class="purchase__payment-title">支払い方法</span></label>
                             <br />
-
                             <select class="purchase__payment-select" name="payment_method" id="payment_method" required>
                                 <option value="" disabled hidden {{ old("payment_method") ? "" : "selected" }}>
                                     選択してください
@@ -53,7 +37,6 @@
                             @enderror
                         </div>
                     </div>
-
                     <div class="purchase__address">
                         <div class="purchase__address-header">
                             <h2 class="purchase__address-title">配送先</h2>
@@ -65,9 +48,8 @@
                         </p>
                         <p class="purchase__address-line">{{ $shippingAddress["address"] ?? "" }}</p>
                         <p class="purchase__address-line">{{ $shippingAddress["building"] ?? "" }}</p>
-
                         @if (! $canPurchase)
-                            <p class="alert">
+                            <p class="session-message">
                                 住所が未登録です。
                                 <a href="{{ route("profile.edit") }}">プロフィール編集</a>
                                 から登録してください。
@@ -115,22 +97,15 @@
             const preview = document.querySelector('[id="payment_preview"]');
 
             if (!select || !preview) return;
-
-            // value→ラベルの対応（Blade側と一致）
             const labels = {
                 1: 'コンビニ払い',
                 2: 'カード支払い',
             };
-
             const update = () => {
                 const val = select.value;
                 preview.textContent = labels[val] ?? '未選択';
             };
-
-            // 初期表示（old値反映）
             update();
-
-            // 変更即時反映
             select.addEventListener('change', update);
         });
     </script>

@@ -17,7 +17,6 @@
         <x-tabs.nav :items="$tabs" />
     </nav>
 
-    {{-- おすすめ一覧 --}}
     @if ($activeTab === "recommend")
         <section class="tabs__content">
             <div class="tabs__content">
@@ -26,7 +25,6 @@
         </section>
     @endif
 
-    {{-- マイリスト一覧 --}}
     @if ($activeTab === "mylist")
         <section class="tabs__content">
             <div class="tabs__content">

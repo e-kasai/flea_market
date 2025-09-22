@@ -8,22 +8,16 @@
 
 @php
     $isPassword = $type === "password";
-    // 追記1
     $isTextarea = $type === "textarea";
-    // パスワードは off、それ以外は指定があればその値、なければ null
+    // パスワードはautocomplete OFF
     $auto = $isPassword ? "off" : $autocomplete;
-
-    // id は渡されていればそれ、無ければ name を使う
     $id = $attributes->get("id") ?? $name;
-    // エラー用ID
     $errorId = $id . "-error";
-    // 追記2
     $oldValue = old($name, $value);
 @endphp
 
 <label class="form-group">
     <span class="form-group__label">{{ $label }}</span>
-    {{-- 追記3:ifブロック --}}
     @if ($isTextarea)
         <textarea
             id="{{ $id }}"
@@ -41,11 +35,9 @@
     @else
         <input
             class="form-group__control @error($name) is-invalid @enderror"
-            {{-- 追記４：id --}}
             id="{{ $id }}"
             type="{{ $type }}"
             name="{{ $name }}"
-            {{-- パスワード以外だけoldで保持 --}}
             @unless ($isPassword)
                 value="{{ old($name, $value) }}"
             @endunless
@@ -56,7 +48,6 @@
         />
     @endif
     @error($name)
-        {{-- <span id="{{ $errorId }}" class="form-group__error">{{ $message }}</span> --}}
         <span id="{{ $errorId }}" class="form-error">{{ $message }}</span>
     @enderror
 </label>

@@ -12,18 +12,36 @@
     font-weight: 700;
 }
 
-/* プロフィール画像選択 */
-.avatar-path {
+.item-photo__preview {
+    max-width: clamp(120px, 30vw, 240px);
+    max-width: 60%;
+    max-height: clamp(120px, 30vw, 240px);
+    object-fit: cover;
+    object-fit: contain;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+
+    height: 100%;
+    max-height: 100%;
+    width: auto;
+    flex: 0 0 auto;
+}
+
+.item-photo__control {
     max-width: 680px;
     height: 150px;
     display: flex;
     justify-content: center;
+    justify-content: space-between;
     align-items: center;
     border: dashed 1px #5f5f5f;
     border-radius: 4px;
+
+    overflow: hidden;
 }
+
 /* inputを隠す */
-.avatar-path__input {
+.item-photo__input {
     appearance: none;
     visibility: hidden;
     margin: 0;
@@ -34,8 +52,9 @@
     font-size: 100%;
     line-height: inherit;
 }
+
 /* 画像を選択するボタン */
-.avatar-path__label {
+.item-photo__btn {
     display: inline-block;
     padding: clamp(0.6rem, 2vw, 1rem) clamp(1.2rem, 4vw, 2rem);
     font-size: clamp(1rem, 2vw, 1.4rem);
@@ -48,14 +67,13 @@
     background: #fff;
 }
 
-.avatar-path__label:hover {
+.item-photo__btn:hover {
     background: #ff6b6b;
     color: #fff;
     cursor: pointer;
 }
 
 /* カテゴリ */
-/* 見出し */
 .categories {
     margin-top: 1rem;
 }
@@ -97,13 +115,10 @@
 .price-input--with-symbol input[name="price"] {
     padding-left: 4rem;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%235f5f5f'><text x='2' y='15' font-size='14' font-family='system-ui,-apple-system,Segoe UI,Roboto,Noto Sans JP,sans-serif'>¥</text></svg>");
-
     background-repeat: no-repeat;
     background-position: 0.6rem 50%;
     background-size: 3rem auto;
 }
-
-/* 商品の状態 */
 
 /* モバイルで複数列に自動折返し */
 @media (max-width: 480px) {

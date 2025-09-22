@@ -6,21 +6,24 @@
 @endpush
 
 @section("content")
-    {{-- 共通レイアウトに差し込む部分 --}}
     <x-form.card title="" action="{{ route('exhibit.store') }}" method="POST" enctype="multipart/form-data">
-        {{-- ----------------------------------- --}}
         <h1 class="form-card__title">商品の出品</h1>
 
-        <section class="avatar">
-            @if ($item->image_path)
-                <img class="item" src="{{ asset("storage/" . $item->image_path) }}" alt="商品画像" />
-            @endif
-
-            {{-- 画像選択リンク --}}
-            <span>商品画像</span>
-            <div class="avatar-path">
-                <label class="avatar-path__label" for="image_path">画像を選択する</label>
-                <input class="avatar-path__input" type="file" id="image_path" name="image_path" />
+        <section class="item-photo">
+            <span class="item-photo__label">商品画像</span>
+            <div class="item-photo__control">
+                <img
+                    id="item-preview"
+                    class="item-photo__preview"
+                    src="{{
+                        $item?->image_path
+                            ? asset("storage/" . $item->image_path)
+                            : asset("img/noimage.png")
+                    }}"
+                    alt="商品画像プレビュー"
+                />
+                <label class="item-photo__btn" for="image_path">画像を選択する</label>
+                <input class="item-photo__input" type="file" id="image_path" name="image_path" accept="image/*" />
             </div>
             @error("image_path")
                 <div class="form-error">
@@ -54,7 +57,6 @@
             @enderror
         </div>
 
-        {{-- 商品の状態 select --}}
         <div class="condition">
             <label for="condition"><span>商品の状態</span></label>
 
@@ -73,22 +75,26 @@
         <div class="subtitle">
             <h2 class="form-card__subtitle">商品名と説明</h2>
         </div>
-        {{-- -------------------------------------------- --}}
-        {{-- 名前 --}}
-        <x-form.input type="text" name="item_name" label="商品名" value="{{ old('item_name') }}" required />
-        {{-- ブランド名 --}}
-        <x-form.input type="text" name="brand_name" label="ブランド名" value="{{ old('brand_name') }}" required />
-        {{-- 商品説明 --}}
-        <x-form.input type="textarea" name="description" label="商品の説明" required>
-            {{ old("description") }}
-        </x-form.input>
-        {{-- 販売価格 --}}
+
+        <x-form.input type="text" name="item_name" label="商品名" required />
+        <x-form.input type="text" name="brand_name" label="ブランド名" required />
+        <x-form.input type="textarea" name="description" label="商品の説明" required></x-form.input>
         <div class="price-input--with-symbol">
             <x-form.input type="text" name="price" label="販売価格" step="1" required />
         </div>
-        {{-- ボタン --}}
+
         <x-slot name="actions">
             <button class="btn" type="submit">出品する</button>
         </x-slot>
     </x-form.card>
 @endsection
+
+@push("scripts")
+    <script>
+        document.getElementById('image_path').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('item-preview').src = URL.createObjectURL(file);
+        });
+    </script>
+@endpush

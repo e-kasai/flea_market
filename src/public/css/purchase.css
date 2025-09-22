@@ -15,8 +15,6 @@
 }
 
 /* 左側 */
-
-/* 画像 */
 .product__img {
     width: clamp(120px, 15vw, 200px);
     height: clamp(120px, 15vw, 200px);
@@ -70,8 +68,6 @@
     font-weight: 700;
     font-size: clamp(0.9rem, 2vw, 16px);
     padding: clamp(0.2rem, 1vw, 5px) clamp(2rem, 8vw, 80px) clamp(0.2rem, 1vw, 5px) 0;
-    /* min-width: 200px;
-    display: block; */
 }
 
 .purchase__address-header {
@@ -80,8 +76,6 @@
     align-items: baseline;
     justify-content: space-between;
     margin: clamp(0.5rem, 2vw, 10px) 0 clamp(0.5rem, 2vw, 10px) clamp(1rem, 6vw, 30px);
-    /* justify-content: flex-start; */
-    /* gap: clamp(2rem, 60vw, 60rem); */
 }
 
 .purchase__address-line {
@@ -130,7 +124,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: clamp(0.5rem, 2vw, 10px) clamp(1rem, 3vw, 4rem);
+    padding: clamp(0.5rem, 2vw, 10px) clamp(1rem, 1vw, 4rem);
     border-top: 1px solid #000000;
 }
 
@@ -175,12 +169,10 @@
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-
     .purchase__right {
         max-width: 100%;
         margin: 0 auto;
     }
-
     .purchase__summary-row {
         padding: 4px 80px;
         gap: 20px;

@@ -88,7 +88,7 @@ HEADER
     height: auto;
 }
 
-.search__input {
+.header__search-input {
     width: 90%;
     width: clamp(12rem, 40vw, 60rem);
     grid-column: 2;
@@ -100,12 +100,12 @@ HEADER
     font-size: clamp(1.6rem, 3vw, 3rem);
 }
 
-.search__input::placeholder {
+.header__search-input::placeholder {
     color: #000000;
     opacity: 1;
 }
 
-.header__nav {
+.nav {
     width: 95%;
     grid-column: 3;
     grid-row: 1;
@@ -116,12 +116,12 @@ HEADER
     font-size: clamp(0.7rem, 1.5vw, 2.5rem);
 }
 
-.logout-form {
+.nav__logout-form {
     grid-column: 1;
     grid-row: 1;
 }
 
-.logout-form__btn {
+.nav__logout-btn {
     height: auto;
     all: unset;
     color: white;
@@ -155,7 +155,7 @@ HEADER
     background-color: #ffffff;
 }
 
-.logout-form__btn:hover,
+.nav__logout-btn:hover,
 .nav__link--mypage:hover,
 .nav__link--sell:hover {
     color: #0056b3;
@@ -179,7 +179,7 @@ HEADER
         width: 40vw;
         max-width: 20rem;
     }
-    .header__nav {
+    .nav {
         grid-column: 2;
         grid-row: 1;
         justify-content: flex-end;
@@ -189,7 +189,7 @@ HEADER
         grid-row: 2;
     }
 
-    .search__input {
+    .header__search-input {
         width: min(92vw, 64rem);
         margin: 0 auto;
         font-size: clamp(1.5rem, 4vw, 1.9rem);
@@ -197,7 +197,7 @@ HEADER
     }
 
     .nav__link,
-    .logout-form {
+    .nav__logout-form {
         font-size: clamp(0.8rem, 2vw, 1.5rem);
     }
 

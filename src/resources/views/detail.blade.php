@@ -5,19 +5,9 @@
 @endpush
 
 @section("content")
-    @php
-        if (Str::startsWith($item->image_path, "http")) {
-            // S3など外部URLの場合
-            $img = $item->image_path;
-        } else {
-            // ローカルストレージの場合
-            $img = asset("storage/" . $item->image_path);
-        }
-    @endphp
-
     <section class="product">
         {{-- 左：画像 --}}
-        <img class="product__img" src="{{ $img }}" alt="{{ $item->item_name }}" />
+        <img class="product__img" src="{{ $item->image_url }}" alt="{{ $item->item_name }}" />
 
         {{-- 右：テキスト系コンテンツ --}}
         <div class="product__body">
@@ -27,8 +17,8 @@
                 ¥{{ number_format($item->price) }}
                 <span class="tax-included">(税込)</span>
             </p>
-            <div class="icons">
-                <div class="like">
+            <div class="product__actions">
+                <div class="product__like">
                     @if ($isFavorited)
                         {{-- いいね済み --}}
                         <form method="POST" action="{{ route("favorite.destroy", $item) }}">
@@ -36,28 +26,23 @@
                             @method("DELETE")
                             <button type="submit" class="icon-btn" aria-pressed="true">
                                 <i class="fa-solid fa-star"></i>
-                                {{-- fa-solid 塗りつぶしあり aria-pressed = true = すでに押された状態 --}}
                             </button>
                         </form>
                     @else
                         {{-- いいねまだ --}}
                         <form method="POST" action="{{ route("favorite.store", $item) }}">
                             @csrf
-
                             <button type="submit" class="icon-btn" aria-pressed="false">
                                 <i class="fa-regular fa-star"></i>
-                                {{-- fa-regular 枠だけ塗りつぶしなし aria-pressed = false = まだ押されてない状態 --}}
                             </button>
                         </form>
                     @endif
-                    {{-- いいね数 --}}
                     <span class="count">{{ $displayFavoritesCount }}</span>
                 </div>
-                <div class="comment">
+                <div class="product__comment">
                     <button type="submit" class="icon-btn" aria-pressed="false">
                         <i class="fa-regular fa-comment"></i>
                     </button>
-                    {{-- コメント数 --}}
                     <span class="count">{{ $comments->count() ?? 0 }}</span>
                 </div>
             </div>
@@ -77,8 +62,7 @@
                         <span class="key">カテゴリー</span>
                         <span class="value category">
                             @foreach ($item->categories as $categoryName)
-                                {{-- <span class="chip">{{ $categoryName->category_name }}</span> --}}
-                                <span class="chip tag--category-detail">{{ $categoryName->category_name }}</span>
+                                <span class="chip chip--category">{{ $categoryName->category_name }}</span>
                             @endforeach
                         </span>
                     </li>
@@ -87,14 +71,11 @@
                         <span class="value condition">{{ $item->condition_label }}</span>
                     </li>
                 </ul>
-                {{-- 商品の状態 --}}
-                {{-- コメント一覧 --}}
-                <div class="comment-list">
-                    {{-- コメント数 --}}
+
+                <div class="comment">
                     @if (isset($comments) && $comments->count())
                         <h2 class="comment__heading">コメント({{ $comments->count() }})</h2>
                         @foreach ($comments as $comment)
-                            {{-- 投稿者情報 --}}
                             <div class="comment__users">
                                 @php
                                     $avatar = optional($comment->user->profile)->avatar_path;
@@ -104,14 +85,12 @@
                                 <img class="comment__users-avatar" src="{{ $avatarPath }}" alt="プロフィール画像" />
                                 <p class="comment__users-name">{{ $comment->user->name }}</p>
                             </div>
-                            {{-- 本文 --}}
                             <p class="comment__body">{{ $comment->body }}</p>
                         @endforeach
                     @else
                         <p class="comment__heading">コメント(0)</p>
                     @endif
                 </div>
-                {{-- コメントフォーム --}}
                 <p class="comment-form__title">商品へのコメント</p>
                 <form method="POST" action="{{ route("comments.store", $item) }}">
                     @csrf
