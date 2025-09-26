@@ -7,13 +7,15 @@ use App\Models\Item;
 use App\Models\Profile;
 use App\Http\Requests\TransactionRequest;
 use Illuminate\Http\Request;
-use Stripe\StripeClient;
-use Illuminate\Support\Facades\DB;
 use App\Services\PaymentService;
+use App\Services\TransactionService;
 
 class PurchaseController extends Controller
 {
-    public function __construct(private PaymentService $pay) {}
+    public function __construct(
+        private PaymentService $payment,
+        private TransactionService $transaction
+    ) {}
 
     public function showPurchasePage(Item $item)
     {
@@ -41,7 +43,6 @@ class PurchaseController extends Controller
         if ($item->is_sold ?? false) {
             return back()->with('message', 'この商品は売り切れです。');
         }
-        //Stripeへ
         return $this->startPayment($request, $item);
     }
 
@@ -57,19 +58,13 @@ class PurchaseController extends Controller
         if ($paymentMethod === self::METHOD_KONBINI) {
             $profile = $user->profile;
             $shippingAddress = $this->buildShippingAddress($item, $profile);
-            $this->completePurchase($item, $shippingAddress, self::METHOD_KONBINI);
+            $this->transaction->completePurchase($item, $shippingAddress, self::METHOD_KONBINI);
         }
 
         $successUrl = route('purchase.complete', [], true) . '?session_id={CHECKOUT_SESSION_ID}';
         $cancelUrl  = route('details.show', $item, true);
 
-        'custom_text' => [
-                'after_submit' => [
-                    'message' => "コンビニ払いは現時点で購入完了仕様です。左上の ← を押して戻ってください。",
-                ],
-            ],
-
-        $url = $this->pay->createCheckoutSession(
+        $url = $this->payment->createCheckoutSession(
             $item,
             $paymentMethod,
             $successUrl,
@@ -115,8 +110,7 @@ class PurchaseController extends Controller
         $sessionId = $request->query('session_id');
         abort_if(!$sessionId, 400, 'session_id missing');
 
-        $stripe = $this->stripe();
-        $session = $stripe->checkout->sessions->retrieve($sessionId, ['expand' => ['payment_intent']]);
+        $session = $this->payment->retrieveSession($sessionId);
 
         $paymentIntent = $session->payment_intent;
         $paymentMethod = (int) ($paymentIntent->metadata->payment_method ?? self::METHOD_CARD);
@@ -125,21 +119,14 @@ class PurchaseController extends Controller
         $profile = auth()->user()?->profile;
         $shippingAddress = $this->buildShippingAddress($item, $profile);
 
-        //コンビニ
-        if ($paymentMethod === self::METHOD_KONBINI) {
-            return redirect()->route('items.index')
-                ->with('message', '購入が完了しました。');
-        }
-
         //カード
         if ($paymentMethod === self::METHOD_CARD && $session->payment_status !== 'paid') {
             return redirect()->route('items.index')->with('error', '決済を確認できませんでした。');
         }
-        $this->completePurchase($item, $shippingAddress, self::METHOD_CARD);
+        $this->transaction->completePurchase($item, $shippingAddress, self::METHOD_CARD);
         return redirect()->route('items.index')->with('message', '購入が完了しました。');
     }
 
-    // プライベートメソッド
     private function buildShippingAddress(Item $item, ?Profile $profile): array
     {
         $originalAddress = [
@@ -150,31 +137,5 @@ class PurchaseController extends Controller
         $draftAddress = session("draft_address.{$item->id}", []);
         $draftAddress = array_intersect_key($draftAddress, $originalAddress);
         return array_replace($originalAddress, $draftAddress);
-    }
-
-    private function completePurchase(Item $item, array $shippingAddress, int $paymentMethod): void
-    {
-        DB::transaction(function () use ($item, $shippingAddress, $paymentMethod) {
-            $locked = Item::whereKey($item->id)->lockForUpdate()->firstOrFail();
-            if ($locked->is_sold) {
-                throw new \RuntimeException('この商品はすでに売り切れです。');
-            }
-            if ($locked->seller_id === auth()->id()) {
-                throw new \RuntimeException('自分の商品は購入できません。');
-            }
-
-            $buyer = auth()->user();
-            $buyer->transactions()->create([
-                'item_id'              => $locked->id,
-                'purchase_price'       => $locked->price,
-                'payment_method'       => $paymentMethod,
-                'shipping_postal_code' => $shippingAddress['postal_code'] ?? null,
-                'shipping_address'     => $shippingAddress['address'] ?? null,
-                'shipping_building'    => $shippingAddress['building'] ?? null,
-                'is_paid'              => true,
-            ]);
-            $locked->update(['is_sold' => true]);
-            session()->forget("draft_address.{$item->id}");
-        });
     }
 }
