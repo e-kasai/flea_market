@@ -13,7 +13,7 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(), // 紐付くユーザーも一緒に作れる
+            'user_id' => User::factory(),
             'postal_code' => $this->faker->postcode(),
             'address' => $this->faker->address(),
             'building' => $this->faker->secondaryAddress(),

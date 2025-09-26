@@ -20,16 +20,13 @@ class CreateTransactionsTable extends Migration
                 ->constrained('users')
                 ->onDelete('cascade');
 
-            // 支払い・金額関連
             $table->tinyInteger('payment_method');
-            $table->unsignedInteger('purchase_price'); // JPYの整数
+            $table->unsignedInteger('purchase_price');
 
-            // 配送先情報
-            $table->char('shipping_postal_code', 8); // ハイフンあり8文字
+            $table->char('shipping_postal_code', 8);
             $table->string('shipping_address', 255);
             $table->string('shipping_building', 255)->nullable();
 
-            // タイムスタンプ
             $table->timestamps();
         });
     }

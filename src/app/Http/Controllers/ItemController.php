@@ -56,7 +56,6 @@ class ItemController extends Controller
 
         //ログインユーザーのいいね数のみDBに保存
         $favoritesCount = $item->favoritedByUsers()->count();
-        //ゲストのセッション配列に、この商品のIDが入ってるかをチェック
         $guestFavorited = in_array($item->id, session('guest_favorites', []));
 
         $isFavorited = auth()->check()

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-// フォームリクエスト
 use App\Http\Requests\RegisterUserRequest;
 use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +26,6 @@ class RegisterController extends Controller
 
         auth()->login($user);
         $request->session()->regenerate();
-        // return redirect()->route('profile.show');
         return redirect()->route('verification.notice');
     }
 }
