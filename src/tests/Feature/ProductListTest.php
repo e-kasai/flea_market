@@ -13,7 +13,7 @@ class ProductListTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp(); // 親の準備処理
+        parent::setUp();
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 

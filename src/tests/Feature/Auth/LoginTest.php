@@ -12,7 +12,7 @@ class LoginTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp(); // 親の準備処理
+        parent::setUp();
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 
@@ -24,7 +24,7 @@ class LoginTest extends TestCase
             'password' => 'password123',
         ]);
 
-        // 期待：メールアドレスを入力してくださいというエラーメッセージが返る
+        //期待：メールアドレスを入力してくださいというエラーメッセージが返る
         $response->assertSessionHasErrors([
             'email' => 'メールアドレスを入力してください',
         ]);
@@ -38,7 +38,7 @@ class LoginTest extends TestCase
             'password' => '',
         ]);
 
-        // 期待：パスワードを入力してくださいというエラーメッセージが返る
+        //期待：パスワードを入力してくださいというエラーメッセージが返る
         $response->assertSessionHasErrors([
             'password' => 'パスワードを入力してください',
         ]);
@@ -48,12 +48,12 @@ class LoginTest extends TestCase
     public function test_login_fails_if_email_is_not_registered()
     {
         $response = $this->post(route('login'), [
-            // メールアドレスは未登録想定（RefreshDatabaseしてるのでそもそも登録済みアドレスがないため）
+            //メールアドレスは未登録想定（RefreshDatabaseしてるのでそもそも登録済みアドレスがないため）
             'email' => 'no-such-user@example.com',
             'password' => 'password',
         ]);
 
-        // 期待：ログイン情報が登録されていませんというエラーメッセージが返る
+        //期待：ログイン情報が登録されていませんというエラーメッセージが返る
         $response->assertSessionHasErrors([
             'email' => 'ログイン情報が登録されていません',
         ]);
@@ -70,7 +70,7 @@ class LoginTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'wrong-password',
         ]);
-        // 期待：ログイン情報が登録されていませんというエラーメッセージが返る
+        //期待：ログイン情報が登録されていませんというエラーメッセージが返る
         $response->assertSessionHasErrors([
             'email' => 'ログイン情報が登録されていません',
         ]);
@@ -78,19 +78,19 @@ class LoginTest extends TestCase
 
     public function test_login_succeeds_with_valid_credentials()
     {
-        // ユーザーを作成（ハッシュ済みパスワード）
+        //ユーザーを作成（ハッシュ済みパスワード）
         $user = User::factory()->create([
             'email' => 'test@example.com',
             'password' => bcrypt('password123'),
         ]);
 
-        // 作成した正しい資格情報でログイン
+        //作成した正しい資格情報でログイン
         $response = $this->post(route('login'), [
             'email' => 'test@example.com',
             'password' => 'password123',
         ]);
 
-        // 期待1: 認証されたことが確認できる
+        //期待1: 認証されたことが確認できる
         $this->assertAuthenticatedAs($user);
 
         //期待2: ログイン時のリダイレクト先商品一覧に遷移する

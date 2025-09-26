@@ -52,7 +52,6 @@ class PaymentMethodTest extends TestCase
             $html
         );
         $this->assertMatchesRegularExpression(
-            // '#<p[^>]*data-testid="payment_preview"[^>]*>\s*コンビニ払い\s*</p>#u',
             '#<p[^>]*id="payment_preview"[^>]*>\s*コンビニ払い\s*</p>#u',
             $html
         );

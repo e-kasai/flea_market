@@ -12,7 +12,7 @@ class ShippingAddressTest extends TestCase
     use RefreshDatabase;
     protected function setUp(): void
     {
-        parent::setUp(); // 親の準備処理
+        parent::setUp();
         $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
     }
 

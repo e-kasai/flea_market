@@ -41,16 +41,16 @@ class AquireUserInfoTest extends TestCase
             'image_path' => 'items/b.jpg',
             'is_sold'    => true,
         ]);
-        Transaction::create([
-            'item_id'               => $purchasedItem->id,
-            'buyer_id'              => $user->id,
-            'payment_method'        => 1,
-            'purchase_price'        => 1000,
-            'shipping_postal_code'  => $user->profile->postal_code,
-            'shipping_address'      => $user->profile->address,
-            'shipping_building '    => $user->profile->building,
-            'is_paid'               => true,
-        ]);
+
+        $transaction = new Transaction();
+        $transaction->item_id              = $purchasedItem->id;
+        $transaction->buyer_id             = $user->id;
+        $transaction->payment_method       = 1;
+        $transaction->purchase_price       = 1000;
+        $transaction->shipping_postal_code = $user->profile->postal_code;
+        $transaction->shipping_address     = $user->profile->address;
+        $transaction->shipping_building    = $user->profile->building;
+        $transaction->save();
 
         $response = $this->actingAs($user)->get(route('profile.show'));
 

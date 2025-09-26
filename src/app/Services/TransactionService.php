@@ -26,7 +26,6 @@ class TransactionService
                 'shipping_postal_code' => $shippingAddress['postal_code'] ?? null,
                 'shipping_address' => $shippingAddress['address'] ?? null,
                 'shipping_building' => $shippingAddress['building'] ?? null,
-                'is_paid' => true,
             ]);
             $locked->update(['is_sold' => true]);
             session()->forget("draft_address.{$item->id}");
