@@ -1,98 +1,253 @@
----
 # アプリケーション名
 
-### coachtechフリマ
+coachtechフリマ
+
 ---
 
-#### 概要
+# 概要
 
 以下の機能を実装したフリマアプリです
 
-- ユーザー登録・ログイン機能
-- マイページ（編集機能/出品した商品一覧/いいねした商品一覧）
-- 商品出品
-- 商品一覧/詳細表示
-- 商品名部分一致による商品検索
-- 商品購入（コンビニ/クレカ払い)
+- ユーザー登録
+- メール認証
+- マイページ（出品/購入一覧表示）
+- 商品一覧・検索・詳細表示
+- 出品/購入機能
+- stripe決済（コンビニ/クレカ払い)
 - お気に入り（いいね）機能
-- 商品詳細画面でのコメント機能
+- コメント機能
 
 ---
 
-## 環境構築
+# 環境構築手順
 
-### Docker ビルド
-
-1. git clone
+### 1. Docker ビルド
 
 ```bash
-git clone git@github.com:e-kasai/flea_market.git     // SSHの場合はこちら
-git clone https://github.com/e-kasai/flea_market.git // HTTPSの場合はこちら
-```
+# git clone (プロジェクトをcloneしたいディレクトリから実行)
+git clone git@github.com:e-kasai/flea_market.git         # SSHの場合はこちら
+git clone https://github.com/e-kasai/flea_market.git     # HTTPSの場合はこちら
 
-2. Docker 立ち上げ
-
-```bash
+# Docker立ち上げ
 cd flea_market
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
-### Laravel 環境構築
-
-1. `docker-compose exec php bash`
-2. `composer install`
-3. `docker compose exec php cp .env.example .env`
-
-4. `.env`に環境変数を追加(具体的な値は slack で共有します)
-
-5. アプリケーションキーの作成
+### 2. Laravel 環境構築
 
 ```bash
-php artisan key:generate
+docker compose exec php bash
+composer install
 ```
 
-6. マイグレーションの実行
+### 3. 環境変数設定
+
+- DB設定とMailHog設定は今回はローカルのみの為、既に入力済みです。
+- APP_KEYとStripeキーは秘密情報にあたる為、リポジトリには含めていませんので作成をお願い致します。
 
 ```bash
+# phpコンテナ内で引き続き実行
+cp .env.example .env             # .env.example` をコピーして `.env` にリネーム
+php artisan key:generate       # APP_KEYの作成
+```
+
+- Stripe設定
+  [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys) にログインし、「公開可能キー」と「シークレットキー」をコピーし.envに追記してください。
+
+```php
+# .envファイルを編集
+STRIPE_KEY=       # pkより始まる各自の公開可能キー
+STRIPE_SECRET=    # skより始まる各自のシークレットキー
+```
+
+### 4. シンボリックリンク追加
+
+```bash
+docker compose exec php bash  # phpコンテナから抜けた場合は再度入る
+php artisan storage:link
+```
+
+### 5. マイグレーション、シーディングの実行
+
+```bash
+# 引き続きphpコンテナ内で実行
 php artisan migrate
-```
-
-7. シーディングの実行
-
-```bash
 php artisan db:seed
 ```
 
-### 環境依存について
-
-Mac の M1・M2 チップの PC の場合、`no matching manifest for linux/arm64/v8 in the manifest list entries`のメッセージが表示されビルドができないことがあります。
-エラーが発生する場合は、docker-compose.yml ファイルの「mysql」セクションに「platform」の項目を追加で記載してください
+### 6. テストの設定
 
 ```bash
-mysql:
-    platform: linux/x86_64  //この文追加
-    image: mysql:8.0.26
-    environment:
+docker compose exec php bash              # phpコンテナに入る
+cp .env.testing.example .env.testing      # .env.testing.exampleをコピーして.env.testingを作成
+
+php artisan key:generate --env=testing    # テスト用のアプリケーションキーを生成（空欄にしてあるため）
+php artisan config:clear                  # 設定キャッシュをクリア
+
+
+# テスト一括実行時は以下のコマンドをご使用ください
+php artisan test
+
 ```
+
+### 7. コード整形（任意）
+
+本プロジェクトは Prettier を利用しています。
+必須ではありませんが、次のコマンドで同じ整形ルールを適用できます。
+
+```bash
+npm install
+npx prettier --write .
+```
+
+環境構築は以上です。
 
 ---
 
-## 使用技術
+# 補足：環境について
+
+### 1. 環境をクリーンに戻す必要が出たとき
+
+- **DB をまっさらな状態** へ戻したい場合は下記コマンドを実行してください。
+  `db:seed` のみ再実行すると `insert` 方式のため重複レコードが発生します。
+
+```bash
+# phpコンテナ内から実行
+docker compose exec php bash
+php artisan migrate:fresh --seed
+```
+
+### 2. arm環境用の設定について
+
+M1/M2 Mac など arm環境での互換性を考慮し、 主に MySQL 用に `platform: linux/x86_64` を指定しています。
+必須ではありませんが、念のためMySQL以外のサービスにも指定しています。
+
+---
+
+# 使用技術
 
 - Laravel 8.83.29
 - PHP 7.4.9
 - MySQL 8.0.26
 - Docker/docker-compose
+- MailHog
+- Stripe
+- JavaScript (ブラウザ実行)
+- Node.js (Prettier 用)
 
 ---
 
-## ER 図
+# ER 図
 
 ![ER図](./docs/er.png)
 
 ---
 
-## URL
+# URL
 
 - 開発環境：http://localhost/
 - phpMyAdmin：http://localhost:8080/
+
+---
+
+## 開発用ログイン情報
+
+Seeder により以下の１０ユーザーが自動作成されます。
+
+- 管理者ユーザー （メール認証済）
+  - メール: admin_user@example.com
+
+- 一般ユーザー（メール認証済）
+  - メール: general_user@example.com
+
+- ユーザー（メール未認証）
+  - メール: userx@example.com (xには3～10のいずれかの数字を入れてください)
+
+パスワードは全て"password"です。
+
+---
+
+# 補足：仕様について
+
+## 1. Stripe決済
+
+本アプリでは Stripe Checkout を利用し、クレジットカードおよびコンビニ決済を実装しています。
+通常、コンビニ決済などの「非即時決済」では StripeのWebhookを受け取り、入金確定を待ってから購入を確定させるのが正しい実装です。
+
+ただし今回の模擬案件では実際の入金処理は不要なことから、Webhookを省略しています。
+
+#### 購入確定タイミング
+
+- コンビニ払い
+  - 購入ボタン押下で即 SOLD/DB確定
+  - その後 Stripe の案内画面へ遷移（Webhook 未使用の簡易実装）
+  - 戻り時のフラッシュは出さない想定
+  - Stripeのコンビニ決済画面の左上にある”←”より戻り、ヘッダーロゴからトップページへ移動するとSOLD表示がされる
+
+- クレカ払い
+  - Stripe で決済 → success_url 到達時（`finalizeTransaction`）に`payment_status=paid` を確認してから SOLD/DB確定
+  - 商品一覧ページにリダイレクトされフラッシュメッセージとSOLDが表示される
+
+#### ダミーカード情報
+
+クレジットカード払いの場合は以下のダミー情報を使用してください。
+
+- カード番号：4242 4242 4242 4242
+- 有効期限：12/34
+- セキュリティコード：123
+- 名前やメールアドレス：任意のもの
+
+---
+
+## 2. メール認証
+
+このアプリは「新規ユーザー登録 → 認証メール受信 → 認証完了 → ログイン」という流れを前提にしています。
+
+ただし、Seeder で作成されるダミーユーザーは登録処理を経ていないため、自動的に認証メールは送信されません。
+
+ダミーユーザーでログインする場合は、以下のいずれかの方法で対応してください：
+
+- 「認証メール再送」を行う
+- 最初から認証済みの管理者アカウント `admin_user@example.com` を利用する
+
+---
+
+## 3. レスポンシブ対応
+
+将来的な保守性を考慮し最新スマホ幅を基準に最小サイズを設定しています
+
+---
+
+## 4. アップロードサイズ制限
+
+本アプリでは商品画像などのアップロードを想定しているため、
+Nginx / PHP のアップロードサイズ制限を 6MB に統一しています(validationの５MB＋１MBバッファ)
+
+| チェック項目                  | コマンド / ファイル | 設定値 |
+| ----------------------------- | ------------------- | ------ |
+| Nginx の client_max_body_size | nginx.conf          | 6 MB   |
+| PHP の upload_max_filesize    | php.ini             | 6 MB   |
+| PHP の post_max_size          | php.ini             | 6 MB   |
+
+---
+
+## 5. 可読性向上
+
+- PurchaseController はフロー制御に専念させるため、
+  Stripe 決済やトランザクション処理などのビジネスロジックは Service クラスに分離することで200行未満を実現しています。
+
+- `App\Services\PaymentService`
+  - Stripe API との通信を担当
+  - Checkout セッションの作成、決済完了の取得など
+
+- `App\Services\TransactionService`
+  - DB への購入情報保存を担当
+  - アイテムをロックし、購入済みに更新／トランザクションを記録する処理
+
+---
+
+## 6. セキュリティ
+
+セキュリティ観点により、`buyer_id`と`seller_id`をfillableから除外しています
+
+---
