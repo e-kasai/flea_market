@@ -15,13 +15,11 @@ class Comment extends Model
         'user_id'
     ];
 
-    // Comment(Child)はItem(Parent)に属する = belongsTo
     public function item()
     {
         return $this->belongsTo(Item::class);
     }
 
-    // Comment(Child)はUser(Parent)に属する = belongsTo
     public function user()
     {
         return $this->belongsTo(User::class);

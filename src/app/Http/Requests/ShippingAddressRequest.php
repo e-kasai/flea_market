@@ -25,9 +25,9 @@ class ShippingAddressRequest extends FormRequest
     //全角を半角に変換し空白を除去
     protected function prepareForValidation(): void
     {
-        $postal = preg_replace('/\s+/u', '', (string) $this->postal_code); // 空白除去
-        $postal = mb_convert_kana($postal, 'n'); // 全角数字を半角
-        $postal = str_replace('ー', '-', $postal); // 全角ハイフンを半角に
+        $postal = preg_replace('/\s+/u', '', (string) $this->postal_code);
+        $postal = mb_convert_kana($postal, 'n');
+        $postal = str_replace('ー', '-', $postal);
         $this->merge(['postal_code' => $postal]);
     }
 

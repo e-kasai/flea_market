@@ -14,7 +14,7 @@ class Item extends Model
     use HasFactory;
 
     protected $fillable = [
-        //単体テストのユースケースはリレーション経由で出品する場合のみの為seller_idは除外
+        //セキュリティ観点からseller_idは除外
         'item_name',
         'brand_name',
         'price',
@@ -31,38 +31,38 @@ class Item extends Model
         'is_sold' => 'boolean',
     ];
 
-    // itemはUserに属する(1対多) = belongsTo
+
     public function user()
     {
         return $this->belongsTo(User::class, 'seller_id');
     }
 
-    // Itemは複数のCommentを持つ = hasMany
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
-    // 1つの商品は0または1件の取引を持つ = hasOne
+
     public function transaction()
     {
         return $this->hasOne(Transaction::class);
     }
 
-    //中間テーブルcategory_itemのリレーション
+
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_item', 'item_id', 'category_id');
     }
 
     //中間テーブルfavoritesのリレーション
-    // usersだとメソッド内容がわかりにくいのでfavoritedByUsersと命名
+    //usersではメソッド内容がわかりにくい為favoritedByUsersと命名
     public function favoritedByUsers()
     {
         return $this->belongsToMany(User::class, 'favorites', 'item_id', 'user_id');
     }
 
     //アクセサ
-    public function getConditionLabelAttribute()
+    public function getConditionLabelAttribute(): string
     {
         return match ($this->condition) {
             0 => '状態が悪い',
@@ -72,6 +72,7 @@ class Item extends Model
         };
     }
 
+    //S3(フルURL)ならそのまま返し、ローカルストレージならstorage配下に変換
     public function getImageUrlAttribute(): string
     {
         if (empty($this->image_path)) {

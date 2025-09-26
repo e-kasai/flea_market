@@ -21,7 +21,6 @@ class RegisterUserRequest extends FormRequest
         ];
     }
 
-    // エラー文を定義
     public function messages(): array
     {
         return [

@@ -50,5 +50,3 @@ class LoginUserRequest extends LoginRequest
         });
     }
 }
-
-

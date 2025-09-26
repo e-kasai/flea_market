@@ -8,7 +8,6 @@ use App\Http\Controllers\ExhibitController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\CheckoutController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -71,12 +70,12 @@ Route::prefix('item')
 
 
 //stripe決済画面へ遷移
-Route::post('/checkout/{item}', [CheckoutController::class, 'startPayment'])
+Route::post('/checkout/{item}', [PurchaseController::class, 'startPayment'])
     ->name('stripe.checkout.create')
     ->middleware(['auth', 'verified']);
 
 //stripe決済処理確定
-Route::get('/purchase/complete', [CheckoutController::class, 'finalizeTransaction'])
+Route::get('/purchase/complete', [PurchaseController::class, 'finalizeTransaction'])
     ->middleware(['auth', 'verified'])
     ->name('purchase.complete');
 
