@@ -85,28 +85,26 @@ cp .env.testing.example .env.testing      # .env.testing.exampleをコピーし�
 php artisan key:generate --env=testing    # テスト用のアプリケーションキーを生成（空欄にしてあるため）
 php artisan config:clear                  # 設定キャッシュをクリア
 
-
-# テスト一括実行時は以下のコマンドをご使用ください
-php artisan test
-
 ```
 
 **補足**
 
-- .env.testing.exampleに、Stripeダミーキーを事前にいれてあります -（テストでStripeClientが動かないエラー回避の為）
+- .env.testing.exampleに、Stripeダミーキーを事前にいれてあります。
 - **.env.testingにStripeキーの実際の値を設定する必要はありません。**
+- テスト一括実行時はphpコンテナ内より、以下のコマンドをご使用ください。
+  `php artisan test`
 
 ### 7. コード整形（任意）
 
-本プロジェクトは Prettier を利用しています。
-必須ではありませんが、次のコマンドで同じ整形ルールを適用できます。
+- 本プロジェクトは Prettier を利用しています。
+- 必須ではありませんが、次のコマンドで同じ整形ルールを適用できます。
 
 ```bash
 npm install
 npx prettier --write .
 ```
 
-環境構築は以上です。
+**環境構築は以上です。**
 
 ---
 
