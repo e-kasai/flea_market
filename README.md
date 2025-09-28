@@ -84,6 +84,17 @@ cp .env.testing.example .env.testing      # .env.testing.exampleをコピーし�
 
 php artisan key:generate --env=testing    # テスト用のアプリケーションキーを生成（空欄にしてあるため）
 php artisan config:clear                  # 設定キャッシュをクリア
+exit
+
+docker compose exec mysql bash           # mysqlコンテナに入る
+mysql -u root -p
+root                                     # password = rootと入力
+CREATE DATABASE app_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;   # app_test DBを作成
+EXIT;
+EXIT;
+
+docker compose exec php bash                    # phpコンテナに入る
+php artisan migrate:fresh --seed --env=testing  # テスト用DBのマイグレーション
 
 ```
 
@@ -91,8 +102,12 @@ php artisan config:clear                  # 設定キャッシュをクリア
 
 - .env.testing.exampleに、Stripeダミーキーを事前にいれてあります。
 - **.env.testingにStripeキーの実際の値を設定する必要はありません。**
-- テスト一括実行時はphpコンテナ内より、以下のコマンドをご使用ください。
-  `php artisan test`
+- テスト一括実行時は以下のコマンドをご使用ください。
+
+```bash
+  docker compose exec php bash
+  php artisan test
+```
 
 ### 7. コード整形（任意）
 
