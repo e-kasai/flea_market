@@ -21,7 +21,7 @@ class RegisterController extends Controller
     {
         $input = $request->validated();
         $user = $creator->create($input);
-        //イベントは自分で
+
         event(new Registered($user));
 
         auth()->login($user);

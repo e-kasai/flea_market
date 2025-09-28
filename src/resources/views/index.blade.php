@@ -26,10 +26,18 @@
     @endif
 
     @if ($activeTab === "mylist")
-        <section class="tabs__content">
-            <div class="tabs__content">
-                <x-grid.item :items="$myListItems" />
-            </div>
-        </section>
+        @auth
+            @if (auth()->user()->hasVerifiedEmail())
+                <section class="tabs__content">
+                    <div class="tabs__content">
+                        <x-grid.item :items="$myListItems" />
+                    </div>
+                </section>
+            @else
+                <p class="session-message">マイリストを見るにはメール認証が必要です。</p>
+            @endif
+        @else
+            <p class="session-message">マイリストを見るにはログインが必要です。</p>
+        @endauth
     @endif
 @endsection
