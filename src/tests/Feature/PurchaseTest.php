@@ -88,7 +88,7 @@ class PurchaseTest extends TestCase
 
         // 期待: 購入した商品にSOLD表示がある
         $response->assertSee('テスト商品');
-        $response->assertSeeText('SOLD'); // Bladeでのラベル表記に合わせる
+        $response->assertSeeText('SOLD');
     }
 
 

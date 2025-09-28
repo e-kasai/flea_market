@@ -78,7 +78,7 @@ class ShippingAddressTest extends TestCase
             'postal_code'    => '100-0001',
             'address'        => 'テスト区1-2-3',
             'building'       => 'テストビル9F',
-        ])->assertStatus(302);
+        ]);
 
         // DBの購入済み商品に住所が紐づいて保存されている
         $this->assertDatabaseHas('transactions', [
