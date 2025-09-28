@@ -90,6 +90,10 @@ php artisan test
 
 ```
 
+補足：
+.env.testing.exampleにはStripeダミーキーを事前にいれてあります（テストでStripeClientが動かないエラー回避の為）
+.env.testingにStripeキーの実際の値を設定する必要はありません
+
 ### 7. コード整形（任意）
 
 本プロジェクトは Prettier を利用しています。
